@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050805">
+<title>POLICE CYBER SYSTEM</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: #030603; color: #6cff7a;
+    font-family: system-ui, Tahoma, Arial, sans-serif; overflow-x: hidden;
+  }
+  body::before {
+    content:""; position:fixed; inset:0; pointer-events:none; opacity:.16;
+    background: repeating-linear-gradient(0deg, transparent 0 3px, #39ff1430 4px 5px);
+  }
+  .wrap { position:relative; z-index:1; width:min(760px,100%); margin:auto; padding:24px 16px 40px; }
+  .badge { text-align:center; letter-spacing:3px; font:700 13px ui-monospace,monospace; color:#9cff9f; }
+  .panel { margin-top:18px; border:1px solid #1d7c2c; border-radius:14px; padding:22px; background:#061007e8; box-shadow:0 0 28px #14ff3020; }
+  h1 { text-align:center; font-size:clamp(25px,6vw,42px); margin:14px 0; color:#a6ffad; text-shadow:0 0 18px #26ff45; }
+  .subtitle { text-align:center; color:#8abf8d; }
+  .terminal { direction:ltr; text-align:left; font:14px/1.9 ui-monospace,monospace; background:#020402; border:1px solid #17451d; padding:15px; border-radius:10px; min-height:190px; overflow:hidden; }
+  .line { white-space:pre-wrap; }
+  .dim { color:#56845a; }
+  .warn { color:#ff5555; }
+  .progress { height:9px; margin:16px 0; background:#102411; border-radius:9px; overflow:hidden; }
+  .bar { height:100%; width:0; background:#42ff5b; box-shadow:0 0 12px #42ff5b; transition:width .3s; }
+  .count { text-align:center; font-size:22px; font-weight:800; margin:12px 0; }
+  .reveal { display:none; text-align:center; border:1px solid #ff4141; background:#180707; border-radius:12px; padding:20px 14px; margin-top:18px; }
+  .reveal h2 { color:#ff5656; font-size:clamp(25px,7vw,38px); margin:6px 0 12px; }
+  .reveal p { color:#ffe1e1; line-height:1.8; }
+  .btn { border:1px solid #65ff75; background:#0b2810; color:#c8ffcd; border-radius:9px; padding:12px 18px; font-weight:700; font-size:16px; cursor:pointer; }
+  .foot { color:#67856a; font-size:12px; text-align:center; margin-top:18px; line-height:1.7; }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="badge">POLICE • CYBER LAB // SIMULATION</div>
+  <section class="panel">
+    <div class="subtitle">واجهة مقلب سينمائي — محاكاة فقط</div>
+    <h1>⚠️ نظام POLICE</h1>
+    <p class="subtitle">جارٍ إجراء فحص وهمي للجهاز...</p>
+    <div class="terminal" aria-live="polite" id="terminal">
+      <div class="line">POLICE_CYBER_SYSTEM v1.0</div>
+      <div class="line dim">Initializing visual simulation...</div>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="count" id="count">بدء الفحص خلال لحظات...</div>
+    <div class="reveal" id="reveal">
+      <h2>📱 تم اختراق هاتفك بواسطة بوليس!</h2>
+      <p>😂 أمزح معك يا صديقي!</p>
+      <p><strong>هذا مقلب بصري فقط.</strong> لم يتم اختراق هاتفك أو فحصه، ولم يتم جمع أي بيانات.</p>
+      <button class="btn" onclick="location.reload()">إعادة المقلب</button>
+    </div>
+  </section>
+  <div class="foot">هذه الصفحة تعرض مؤثرات نصية فقط. لا تفحص الجهاز ولا تتصل به ولا تجمع معلومات.</div>
+</div>
+<script>
+(() => {
+  const terminal = document.getElementById('terminal');
+  const bar = document.getElementById('bar');
+  const count = document.getElementById('count');
+  const reveal = document.getElementById('reveal');
+  const lines = [
+    '[OK] Loading fictional cyber interface...',
+    '[OK] Checking imaginary device status...',
+    '[SIMULATION] No device access attempted.',
+    '[SIMULATION] Preparing POLICE announcement...',
+    '[DONE] Visual prank ready.'
+  ];
+  let i = 0;
+  const addLine = (text, cls='line') => {
+    const el = document.createElement('div');
+    el.className = cls;
+    el.textContent = text;
+    terminal.appendChild(el);
+    terminal.scrollTop = terminal.scrollHeight;
+  };
+  const interval = setInterval(() => {
+    if (i < lines.length) {
+      addLine(lines[i], i === 2 || i === 3 ? 'line dim' : 'line');
+      bar.style.width = ((i + 1) / lines.length * 100) + '%';
+      count.textContent = 'جاري التحضير... ' + Math.round((i + 1) / lines.length * 100) + '%';
+      i++;
+    } else {
+      clearInterval(interval);
+      count.textContent = 'اكتملت المحاكاة';
+      reveal.style.display = 'block';
+    }
+  }, 900);
+})();
+</script>
+</body>
+</html>
