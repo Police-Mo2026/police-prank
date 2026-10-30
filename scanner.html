@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POLICE CYBER LAB</title>
+
+<style>
+body {
+    background: #080d16;
+    color: #00ff99;
+    font-family: monospace;
+    text-align: center;
+    padding: 25px;
+}
+.box {
+    border: 1px solid #00ff99;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 25px;
+}
+button {
+    background: #00ff99;
+    padding: 13px;
+    border: none;
+    border-radius: 7px;
+    font-weight: bold;
+    margin: 8px;
+}
+pre {
+    color: white;
+    text-align: left;
+    white-space: pre-wrap;
+}
+</style>
+</head>
+
+<body>
+<h1>POLICE CYBER LAB</h1>
+<h3>LINK SECURITY SCANNER 1.0</h3>
+
+<div class="box">
+<p>Authorized Security Test</p>
+<p>This test displays basic browser information.</p>
+
+<label>
+<input type="checkbox" id="consent">
+I agree to this security test.
+</label>
+<br><br>
+
+<button onclick="scan()">START SCAN</button>
+<pre id="result">Waiting for authorization...</pre>
+<button onclick="copyReport()">COPY REPORT</button>
+</div>
+
+<script>
+let report = "";
+
+function scan() {
+if (!document.getElementById("consent").checked) {
+alert("Please approve the test first.");
+return;
+}
+
+report =
+"POLICE CYBER LAB\n" +
+"Browser: " + navigator.userAgent + "\n" +
+"Platform: " + navigator.platform + "\n" +
+"Language: " + navigator.language + "\n" +
+"Screen: " + screen.width + " x " + screen.height + "\n" +
+"Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone + "\n" +
+"Cookies enabled: " + navigator.cookieEnabled + "\n" +
+"No personal files accessed.\n" +
+"No data transmitted.";
+
+document.getElementById("result").textContent = report;
+}
+
+function copyReport() {
+if (!report) {
+alert("Run the scan first.");
+return;
+}
+navigator.clipboard.writeText(report)
+.then(() => alert("Report copied!"))
+.catch(() => alert("Please copy the report manually."));
+}
+</script>
+</body>
+  </html>
