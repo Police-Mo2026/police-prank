@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POLICE CYBER LAB</title>
+<title>POLICE CYBER LAB 2.0</title>
 
 <style>
 body {
@@ -11,17 +11,27 @@ body {
     color: #00ff99;
     font-family: monospace;
     text-align: center;
-    padding: 25px;
+    padding: 20px;
 }
 .box {
     border: 1px solid #00ff99;
     padding: 20px;
     border-radius: 12px;
-    margin-top: 25px;
+    margin-top: 20px;
+    box-shadow: 0 0 12px #00ff9940;
+}
+input[type="text"] {
+    width: 90%;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 7px;
+    border: 1px solid #00ff99;
+    background: #101a27;
+    color: white;
 }
 button {
     background: #00ff99;
-    padding: 13px;
+    padding: 13px 20px;
     border: none;
     border-radius: 7px;
     font-weight: bold;
@@ -31,61 +41,159 @@ pre {
     color: white;
     text-align: left;
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
+.safe { color: #00ff99; }
+.warning { color: orange; }
+.danger { color: #ff4444; }
 </style>
 </head>
 
 <body>
+
 <h1>POLICE CYBER LAB</h1>
-<h3>LINK SECURITY SCANNER 1.0</h3>
+<h3>LINK SECURITY SCANNER 2.0</h3>
 
 <div class="box">
-<p>Authorized Security Test</p>
-<p>This test displays basic browser information.</p>
 
-<label>
-<input type="checkbox" id="consent">
-I agree to this security test.
-</label>
-<br><br>
+<p>AUTHORIZED SECURITY ANALYSIS</p>
+
+<input type="text" id="url"
+placeholder="Enter website URL (https://example.com)">
+
+<br>
 
 <button onclick="scan()">START SCAN</button>
-<pre id="result">Waiting for authorization...</pre>
+<button onclick="clearScan()">CLEAR</button>
+
+<pre id="result">Scanner ready...</pre>
+
 <button onclick="copyReport()">COPY REPORT</button>
+
 </div>
 
 <script>
+
 let report = "";
 
 function scan() {
-if (!document.getElementById("consent").checked) {
-alert("Please approve the test first.");
+let input = document.getElementById("url").value.trim();
+let result = document.getElementById("result");
+
+if (!input) {
+alert("Please enter a URL.");
 return;
 }
 
-report =
-"POLICE CYBER LAB\n" +
-"Browser: " + navigator.userAgent + "\n" +
-"Platform: " + navigator.platform + "\n" +
-"Language: " + navigator.language + "\n" +
-"Screen: " + screen.width + " x " + screen.height + "\n" +
-"Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone + "\n" +
-"Cookies enabled: " + navigator.cookieEnabled + "\n" +
-"No personal files accessed.\n" +
-"No data transmitted.";
+let url;
 
-document.getElementById("result").textContent = report;
+try {
+
+url = new URL(input);
+
+if (!["http:", "https:"].includes(url.protocol)) {
+throw new Error("Invalid protocol");
+}
+
+} catch {
+
+result.textContent = "INVALID URL!";
+return;
+
+}
+
+let risks = [];
+let score = 0;
+
+if (url.protocol !== "https:") {
+risks.push("HTTPS is not enabled.");
+score += 25;
+}
+
+if (url.username || url.password) {
+risks.push("URL contains embedded login information.");
+score += 25;
+}
+
+if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(url.hostname)) {
+risks.push("Website uses an IP address instead of a domain.");
+score += 20;
+}
+
+if (url.hostname.startsWith("xn--") ||
+url.hostname.includes(".xn--")) {
+risks.push("Internationalized domain detected. Check for lookalike characters.");
+score += 15;
+}
+
+if (url.hostname.split(".").length > 4) {
+risks.push("Unusually many subdomains.");
+score += 10;
+}
+
+if (url.hostname.includes("login") ||
+url.hostname.includes("verify") ||
+url.hostname.includes("secure")) {
+risks.push("Domain contains a sensitive keyword. Verify its identity.");
+score += 10;
+}
+
+score = Math.min(score, 100);
+
+let status = score >= 50
+? "HIGH RISK INDICATORS"
+: score >= 25
+? "CAUTION"
+: "NO BASIC WARNING DETECTED";
+
+report =
+"POLICE CYBER LAB 2.0\n" +
+"------------------------\n" +
+"Target: " + url.hostname + "\n" +
+"Protocol: " + url.protocol + "\n" +
+"Full URL: " + url.href + "\n\n" +
+"Risk Score: " + score + "/100\n" +
+"Assessment: " + status + "\n\n" +
+"FINDINGS:\n" +
+(risks.length ? risks.join("\n") : "No basic warning indicators found.") +
+"\n\n" +
+"IMPORTANT:\n" +
+"This is a local heuristic scan.\n" +
+"It does not confirm whet٩her a website is safe or malicious.\n" +
+"No external website was contacted.\n" +
+"No personal data transmitted.";
+
+result.textContent = report;
+
+result.className = score >= 50
+? "danger"
+: score >= 25
+? "warning"
+: "safe";
+
+}
+
+function clearScan() {
+document.getElementById("url").value = "";
+document.getElementById("result").textContent = "Scanner ready...";
+document.getElementById("result").className = "";
+report = "";
 }
 
 function copyReport() {
+
 if (!report) {
 alert("Run the scan first.");
 return;
 }
+
 navigator.clipboard.writeText(report)
 .then(() => alert("Report copied!"))
-.catch(() => alert("Please copy the report manually."));
+.catch(() => alert("Copy manually."));
+
 }
+
 </script>
+
 </body>
-  </html>
+    </html>
