@@ -41,6 +41,7 @@ button {
     border-radius: 7px;
     font-weight: bold;
     margin: 8px;
+    cursor: pointer;
 }
 
 pre {
@@ -90,7 +91,6 @@ placeholder="Enter website URL..."
 
 let report = "";
 
-// TRUSTED BRANDS
 const trustedBrands = {
     paypal: "paypal.com",
     google: "google.com",
@@ -136,19 +136,19 @@ function analyzeDomain(host) {
 }
 
 
-// NORMALIZE DOMAIN
+// DOMAIN NORMALIZATION
 function normalizeDomain(value) {
 
     return value.toLowerCase()
         .replace(/0/g, "o")
-        .replace(/1/g, "l")
+        .replace(/1/g, "i")
         .replace(/3/g, "e")
         .replace(/5/g, "s")
         .replace(/-/g, "");
 }
 
 
-// LEVENSHTEIN DISTANCE
+// EDIT DISTANCE
 function editDistance(a, b) {
 
     let matrix = [];
@@ -179,7 +179,7 @@ function editDistance(a, b) {
 }
 
 
-// SIMILARITY SCORE
+// SIMILARITY
 function similarity(a, b) {
 
     const distance = editDistance(a, b);
@@ -209,13 +209,13 @@ function detectLookalikes(host) {
 
         if (official) continue;
 
-        const normalizedBrand = normalizeDomain(brand);
-
         for (const label of labels) {
 
             if (label.length < 4) continue;
 
             const normalizedLabel = normalizeDomain(label);
+
+            const normalizedBrand = normalizeDomain(brand);
 
             const score = similarity(
                 normalizedLabel,
@@ -278,6 +278,7 @@ function scan() {
     let score = 0;
 
     const host = url.hostname.toLowerCase();
+
     const raw = input.toLowerCase();
 
     const domainInfo = analyzeDomain(host);
@@ -294,8 +295,7 @@ function scan() {
             " | Brand: " +
             item.brand +
             " | Similarity: " +
-            item.score +
-            "%"
+            item.score + "%"
         );
 
         score += 35;
@@ -321,7 +321,7 @@ function scan() {
 
 
     // IDN CHECK
-    if (host.startsWith("xn--") || host.includes(".xn--")) {
+    if (host.includes("xn--")) {
 
         risks.push("Internationalized domain detected.");
 
@@ -330,13 +330,7 @@ function scan() {
 
 
     // IP ADDRESS CHECK
-    if (/^(?:\d{1,3}\.){4}$/.test(host)) {
-
-        risks.push("IP address used instead of domain.");
-
-        score += 20;
-
-    } else if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(host)) {
+    if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(host)) {
 
         risks.push("IP address used instead of domain.");
 
@@ -395,7 +389,6 @@ function scan() {
     score = Math.min(score, 100);
 
 
-    // FINAL ASSESSMENT
     let status =
         score >= 50 ? "HIGH RISK INDICATORS" :
         score >= 25 ? "CAUTION" :
@@ -478,4 +471,4 @@ function copyReport() {
 </script>
 
 </body>
-</html>
+    </html>
