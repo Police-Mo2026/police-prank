@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POLICE CYBER LAB 2.0</title>
+
+<title>POLICE CYBER LAB 3.0</title>
 
 <style>
 body {
@@ -13,22 +14,25 @@ body {
     text-align: center;
     padding: 20px;
 }
+
 .box {
     border: 1px solid #00ff99;
     padding: 20px;
     border-radius: 12px;
     margin-top: 20px;
-    box-shadow: 0 0 12px #00ff9940;
+    box-shadow: 0 0 15px #00ff9940;
 }
-input[type="text"] {
+
+input {
     width: 90%;
-    padding: 12px;
-    margin: 12px 0;
+    padding: 13px;
+    margin: 15px 0;
     border-radius: 7px;
     border: 1px solid #00ff99;
     background: #101a27;
     color: white;
 }
+
 button {
     background: #00ff99;
     padding: 13px 20px;
@@ -37,29 +41,38 @@ button {
     font-weight: bold;
     margin: 8px;
 }
+
 pre {
     color: white;
     text-align: left;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
 }
+
 .safe { color: #00ff99; }
 .warning { color: orange; }
 .danger { color: #ff4444; }
+
+h1 {
+    text-shadow: 0 0 12px #00ff99;
+}
 </style>
 </head>
 
 <body>
 
 <h1>POLICE CYBER LAB</h1>
-<h3>LINK SECURITY SCANNER 2.0</h3>
+<h3>LINK SECURITY SCANNER 3.0</h3>
 
 <div class="box">
 
 <p>AUTHORIZED SECURITY ANALYSIS</p>
 
-<input type="text" id="url"
-placeholder="Enter website URL (https://example.com)">
+<input
+type="text"
+id="urlInput"
+placeholder="Enter website URL..."
+>
 
 <br>
 
@@ -77,10 +90,12 @@ placeholder="Enter website URL (https://example.com)">
 let report = "";
 
 function scan() {
-alert("POLICE SCANNER IS WORKING!");
+
+const input = document.getElementById("urlInput").value.trim();
+const result = document.getElementById("result");
 
 if (!input) {
-alert("Please enter a URL.");
+result.textContent = "PLEASE ENTER A URL!";
 return;
 }
 
@@ -88,7 +103,11 @@ let url;
 
 try {
 
-url = new URL(input);
+url = new URL(
+/^https?:\/\//i.test(input)
+? input
+: "https://" + input
+);
 
 if (!["http:", "https:"].includes(url.protocol)) {
 throw new Error("Invalid protocol");
@@ -104,79 +123,98 @@ return;
 let risks = [];
 let score = 0;
 
+const host = url.hostname.toLowerCase();
+const raw = input.toLowerCase();
+
 if (url.protocol !== "https:") {
-risks.push("HTTPS is not enabled.");
-score += 25;
-}
-
-if (url.username || url.password) {
-risks.push("URL contains embedded login information.");
-score += 25;
-}
-
-if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(url.hostname)) {
-risks.push("Website uses an IP address instead of a domain.");
+risks.push("HTTP connection detected.");
 score += 20;
 }
 
-if (url.hostname.startsWith("xn--") ||
-url.hostname.includes(".xn--")) {
-risks.push("Internationalized domain detected. Check for lookalike characters.");
-score += 15;
+if (url.username || url.password) {
+risks.push("Embedded credentials detected.");
+score += 25;
 }
 
-if (url.hostname.split(".").length > 4) {
+if (host.startsWith("xn--") || host.includes(".xn--")) {
+risks.push("Internationalized domain detected.");
+score += 20;
+}
+
+if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(host)) {
+risks.push("IP address used instead of domain.");
+score += 20;
+}
+
+if (host.split(".").length > 4) {
 risks.push("Unusually many subdomains.");
 score += 10;
 }
 
-if (url.hostname.includes("login") ||
-url.hostname.includes("verify") ||
-url.hostname.includes("secure")) {
-risks.push("Domain contains a sensitive keyword. Verify its identity.");
+if (/login|verify|account|password|secure/.test(host)) {
+risks.push("Sensitive keywords in domain.");
+score += 15;
+}
+
+if (raw.includes("@")) {
+risks.push("URL contains @ character.");
+score += 15;
+}
+
+if (/bit\.ly|tinyurl\.com|t\.co|cutt\.ly/i.test(host)) {
+risks.push("URL shortener detected.");
+score += 15;
+}
+
+if (url.href.length > 150) {
+risks.push("Unusually long URL.");
 score += 10;
 }
 
 score = Math.min(score, 100);
 
-let status = score >= 50
-? "HIGH RISK INDICATORS"
-: score >= 25
-? "CAUTION"
-: "NO BASIC WARNING DETECTED";
+let status =
+score >= 50 ? "HIGH RISK INDICATORS" :
+score >= 25 ? "CAUTION" :
+"NO BASIC WARNING DETECTED";
 
 report =
-"POLICE CYBER LAB 2.0\n" +
-"------------------------\n" +
-"Target: " + url.hostname + "\n" +
+"POLICE CYBER LAB 3.0\n" +
+"-------------------------\n" +
+"Domain: " + host + "\n" +
 "Protocol: " + url.protocol + "\n" +
-"Full URL: " + url.href + "\n\n" +
 "Risk Score: " + score + "/100\n" +
 "Assessment: " + status + "\n\n" +
-"FINDINGS:\n" +
-(risks.length ? risks.join("\n") : "No basic warning indicators found.") +
+"SECURITY FINDINGS:\n" +
+(risks.length ? risks.join("\n") :
+"No basic warning indicators found.") +
 "\n\n" +
 "IMPORTANT:\n" +
-"This is a local heuristic scan.\n" +
-"It does not confirm whet٩her a website is safe or malicious.\n" +
+"This is a local heuristic analysis.\n" +
+"It does not confirm whether a website is safe.\n" +
 "No external website was contacted.\n" +
-"No personal data transmitted.";
+"No personal information was transmitted.";
 
 result.textContent = report;
 
-result.className = score >= 50
-? "danger"
-: score >= 25
-? "warning"
-: "safe";
+result.className =
+score >= 50 ? "danger" :
+score >= 25 ? "warning" :
+"safe";
 
 }
 
 function clearScan() {
-document.getElementById("url").value = "";
-document.getElementById("result").textContent = "Scanner ready...";
-document.getElementById("result").className = "";
+
+document.getElementById("urlInput").value = "";
+
+const result = document.getElementById("result");
+
+result.textContent = "Scanner ready...";
+result.className = "";
+
 report = "";
+
 }
 
 function copyReport() {
