@@ -125,7 +125,32 @@ let score = 0;
 
 const host = url.hostname.toLowerCase();
 const raw = input.toLowerCase();
+// BRAND IMPERSONATION DETECTION
 
+const trustedBrands = {
+    "paypal": "paypal.com",
+    "google": "google.com",
+    "facebook": "facebook.com",
+    "amazon": "amazon.com",
+    "microsoft": "microsoft.com",
+    "apple": "apple.com"
+};
+
+for (const [brand, officialDomain] of Object.entries(trustedBrands)) {
+
+    const official =
+        host === officialDomain ||
+        host.endsWith("." + officialDomain);
+
+    if (host.includes(brand) && !official) {
+
+        risks.push(
+            "Possible brand impersonation: " + brand
+        );
+
+        score += 25;
+    }
+}
 if (url.protocol !== "https:") {
 risks.push("HTTP connection detected.");
 score += 20;
