@@ -423,6 +423,7 @@ function calculateRisk(findings) {
         credentials: 25,
         longURL: 10,
         lookalike: 35,
+        brandImpersonation: 35,
         insecureProtocol: 15
     };
 
@@ -506,7 +507,19 @@ function analyzeURL(input) {
     }
 
     const domainAnalysis = analyzeDomain(hostname);
+// BRAND IMPERSONATION ANALYSIS
 
+const impersonation = detectBrandImpersonation(hostname);
+if (impersonation.length > 0) {
+    findings.push("brandImpersonation");
+
+    impersonation.forEach(item => {
+        messages.push(
+            "Possible " + item.brand +
+            " brand impersonation: " + item.reason
+        );
+    });
+    }
     if (domainAnalysis.lookalikes.length > 0) {
         findings.push("lookalike");
 
