@@ -45,9 +45,7 @@ button {
     cursor: pointer;
 }
 
-button:hover {
-    background: #00cc77;
-}
+button:hover { background: #00cc77; }
 
 pre {
     color: white;
@@ -119,19 +117,17 @@ const trustedBrands = {
 };
 
 const suspiciousRedirectParameters = [
-    "url",
-    "redirect",
-    "redirect_url",
-    "redirect_uri",
-    "next",
-    "return",
-    "return_url",
-    "continue",
-    "destination",
-    "dest",
-    "target",
-    "goto",
-    "callback"
+    "url", "redirect", "redirect_url",
+    "redirect_uri", "next", "return",
+    "return_url", "continue", "destination",
+    "dest", "target", "goto", "callback"
+];
+
+const specialSuffixes = [
+    "co.uk", "org.uk", "ac.uk",
+    "com.au", "net.au", "org.au",
+    "co.nz", "com.br", "com.cn",
+    "co.jp", "co.in"
 ];
 
 // =====================================
@@ -142,26 +138,21 @@ function analyzeDomain(host) {
 
     const parts = host.split(".");
 
-    const specialSuffixes = [
-        "co.uk", "org.uk", "ac.uk",
-        "com.au", "net.au", "org.au",
-        "co.nz", "com.br", "com.cn",
-        "co.jp", "co.in"
-    ];
+    if (parts.length < 2) {
+        return {
+            hostname: host,
+            subdomain: "None",
+            rootDomain: host
+        };
+    }
 
     const lastTwo = parts.slice(-2).join(".");
     const lastThree = parts.slice(-3).join(".");
 
-    let rootDomain;
-
-    if (
-        specialSuffixes.includes(lastTwo) &&
-        parts.length >= 3
-    ) {
-        rootDomain = lastThree;
-    } else {
-        rootDomain = lastTwo;
-    }
+    let rootDomain = specialSuffixes.includes(lastTwo)
+        && parts.length >= 3
+        ? lastThree
+        : lastTwo;
 
     const subdomain = host === rootDomain
         ? "None"
@@ -229,11 +220,7 @@ function editDistance(a, b) {
 function similarity(a, b) {
 
     const distance = editDistance(a, b);
-
-    const maxLength = Math.max(
-        a.length,
-        b.length
-    );
+    const maxLength = Math.max(a.length, b.length);
 
     if (maxLength === 0) return 100;
 
@@ -259,7 +246,6 @@ function isOfficialBrandDomain(host, domain) {
 function detectLookalikes(host) {
 
     const findings = [];
-
     const labels = host.split(".");
 
     for (const [brand, officialDomain] of
@@ -280,6 +266,11 @@ function detectLookalikes(host) {
                 normalizeDomain(brand);
 
             const score = similarity(
+                label.replace(/-/g, ""),
+                brand
+            );
+
+            const normalizedScore = similarity(
                 normalizedLabel,
                 normalizedBrand
             );
@@ -290,7 +281,7 @@ function detectLookalikes(host) {
 
             if (
                 normalizedLabel === normalizedBrand ||
-                score >= 75 ||
+                normalizedScore >= 75 ||
                 (containsBrand && label.length <= brand.length + 12)
             ) {
 
@@ -346,20 +337,18 @@ function getRawHostname(input) {
 
 function detectUnicodeHost(rawInput) {
 
-    const findings = [];
-
     const rawHost = getRawHostname(rawInput);
 
-    if (!rawHost) return findings;
+    if (!rawHost) return [];
 
     if (/[^\x00-\x7F]/.test(rawHost)) {
 
-        findings.push(
+        return [
             "Non-ASCII Unicode characters found in hostname."
-        );
+        ];
     }
 
-    return findings;
+    return [];
 }
 
 // =====================================
@@ -368,9 +357,9 @@ function detectUnicodeHost(rawInput) {
 
 function detectPunycode(host) {
 
-    return host
-        .split(".")
-        .some(label => label.startsWith("xn--"));
+    return host.split(".").some(
+        label => label.startsWith("xn--")
+    );
 }
 
 // =====================================
@@ -380,52 +369,36 @@ function detectPunycode(host) {
 function detectObfuscation(rawInput) {
 
     const findings = [];
-
     const raw = rawInput.toLowerCase();
 
     if (/%(?:2f|5c|40|2e|3a)/i.test(raw)) {
-
-        findings.push(
-            "Encoded URL delimiter detected."
-        );
+        findings.push("Encoded URL delimiter detected.");
     }
 
     if (rawInput.includes("\\")) {
-
-        findings.push(
-            "Backslash detected in URL."
-        );
+        findings.push("Backslash detected in URL.");
     }
 
     if (/%25(?:2f|5c|40|2e|3a)/i.test(raw)) {
-
-        findings.push(
-            "Possible double URL encoding detected."
-        );
+        findings.push("Possible double URL encoding detected.");
     }
 
     if (/[\u0000-\u001F\u007F]/.test(rawInput)) {
-
-        findings.push(
-            "Control characters detected."
-        );
+        findings.push("Control characters detected.");
     }
 
     const encodedCount =
         (raw.match(/%[0-9a-f]{2}/g) || []).length;
 
     if (encodedCount >= 5) {
-
-        findings.push(
-            "Excessive percent encoding detected."
-        );
+        findings.push("Excessive percent encoding detected.");
     }
 
     return findings;
 }
 
 // =====================================
-// IPV4 DETECTION
+// IP ADDRESS DETECTION
 // =====================================
 
 function detectIPAddress(host) {
@@ -452,14 +425,10 @@ function detectSuspiciousPort(url) {
     if (!port) return [];
 
     const commonPorts = [
-        "80",
-        "443",
-        "8080",
-        "8443"
+        "80", "443", "8080", "8443"
     ];
 
     if (!commonPorts.includes(port)) {
-
         return [
             "Uncommon destination port: " + port
         ];
@@ -478,11 +447,9 @@ function detectRedirectParameters(url) {
 
     for (const [key, value] of url.searchParams) {
 
-        if (
-            !suspiciousRedirectParameters.includes(
-                key.toLowerCase()
-            )
-        ) {
+        if (!suspiciousRedirectParameters.includes(
+            key.toLowerCase()
+        )) {
             continue;
         }
 
@@ -490,9 +457,7 @@ function detectRedirectParameters(url) {
 
         try {
             decodedValue = decodeURIComponent(value);
-        } catch (error) {
-            // Keep original value.
-        }
+        } catch (error) {}
 
         try {
 
@@ -507,18 +472,15 @@ function detectRedirectParameters(url) {
             ) {
 
                 findings.push(
-                    "External redirect destination in parameter: " +
-                    key
+                    "External redirect destination in parameter: " + key
                 );
             }
 
         } catch (error) {
 
             if (/https?:\/\//i.test(decodedValue)) {
-
                 findings.push(
-                    "Possible encoded redirect destination: " +
-                    key
+                    "Possible encoded redirect destination: " + key
                 );
             }
         }
@@ -533,9 +495,7 @@ function detectRedirectParameters(url) {
 
 function detectCredentials(url) {
 
-    return Boolean(
-        url.username || url.password
-    );
+    return Boolean(url.username || url.password);
 }
 
 // =====================================
@@ -556,7 +516,6 @@ function calculateRisk(findings) {
     let score = 0;
 
     for (const finding of findings) {
-
         score += finding.points;
     }
 
@@ -573,12 +532,12 @@ function scan() {
         .getElementById("urlInput")
         .value.trim();
 
-    const result = document
-        .getElementById("result");
+    const result = document.getElementById("result");
 
     if (!input) {
-
         result.textContent = "PLEASE ENTER A URL!";
+        result.className = "warning";
+        report = "";
         return;
     }
 
@@ -586,11 +545,12 @@ function scan() {
 
     try {
 
-        url = new URL(
+        const preparedInput =
             /^https?:\/\//i.test(input)
                 ? input
-                : "https://" + input
-        );
+                : "https://" + input;
+
+        url = new URL(preparedInput);
 
         if (
             !["http:", "https:"].includes(url.protocol) ||
@@ -603,21 +563,17 @@ function scan() {
 
         result.textContent = "INVALID URL!";
         result.className = "danger";
-
+        report = "";
         return;
     }
 
     const host = url.hostname.toLowerCase();
-
     const domainInfo = analyzeDomain(host);
-
     const findings = [];
 
     function addFinding(title, points, category) {
 
-        if (findings.some(f => f.title === title)) {
-            return;
-        }
+        if (findings.some(f => f.title === title)) return;
 
         findings.push({
             title,
@@ -626,7 +582,7 @@ function scan() {
         });
     }
 
-    // LOOKALIKE ANALYSIS
+    // BRAND ANALYSIS
 
     const lookalikes = detectLookalikes(host);
 
@@ -646,22 +602,15 @@ function scan() {
 
     // UNICODE
 
-    const unicodeFindings =
-        detectUnicodeHost(input);
+    const unicodeFindings = detectUnicodeHost(input);
 
     for (const finding of unicodeFindings) {
-
-        addFinding(
-            finding,
-            25,
-            "Unicode"
-        );
+        addFinding(finding, 25, "Unicode");
     }
 
     // PUNYCODE
 
     if (detectPunycode(host)) {
-
         addFinding(
             "Punycode hostname detected.",
             20,
@@ -671,22 +620,13 @@ function scan() {
 
     // OBFUSCATION
 
-    const obfuscationFindings =
-        detectObfuscation(input);
-
-    for (const finding of obfuscationFindings) {
-
-        addFinding(
-            finding,
-            15,
-            "Obfuscation"
-        );
+    for (const finding of detectObfuscation(input)) {
+        addFinding(finding, 15, "Obfuscation");
     }
 
-    // HTTPS
+    // HTTP
 
     if (url.protocol !== "https:") {
-
         addFinding(
             "HTTP connection detected.",
             20,
@@ -697,7 +637,6 @@ function scan() {
     // CREDENTIALS
 
     if (detectCredentials(url)) {
-
         addFinding(
             "Embedded URL credentials detected.",
             25,
@@ -708,7 +647,6 @@ function scan() {
     // IPV4
 
     if (detectIPAddress(host)) {
-
         addFinding(
             "IP address used instead of domain.",
             20,
@@ -719,7 +657,6 @@ function scan() {
     // IPV6
 
     if (host.includes(":")) {
-
         addFinding(
             "IPv6 address used as hostname.",
             20,
@@ -727,13 +664,12 @@ function scan() {
         );
     }
 
-    // SUBDOMAIN
+    // SUBDOMAINS
 
     if (
         domainInfo.subdomain !== "None" &&
         domainInfo.subdomain.split(".").length > 3
     ) {
-
         addFinding(
             "Unusually many subdomains.",
             10,
@@ -743,10 +679,7 @@ function scan() {
 
     // SENSITIVE KEYWORDS
 
-    if (
-        /login|verify|account|password|secure/i.test(host)
-    ) {
-
+    if (/login|verify|account|password|secure/i.test(host)) {
         addFinding(
             "Sensitive keywords in hostname.",
             15,
@@ -754,12 +687,11 @@ function scan() {
         );
     }
 
-    // URL SHORTENER
+    // URL SHORTENERS
 
     if (
         /(^|\.)bit\.ly$|(^|\.)tinyurl\.com$|(^|\.)t\.co$|(^|\.)cutt\.ly$/i.test(host)
     ) {
-
         addFinding(
             "Known URL shortener detected.",
             15,
@@ -770,7 +702,6 @@ function scan() {
     // URL LENGTH
 
     if (isLongURL(url)) {
-
         addFinding(
             "Unusually long URL.",
             10,
@@ -780,16 +711,8 @@ function scan() {
 
     // PORT
 
-    const portFindings =
-        detectSuspiciousPort(url);
-
-    for (const finding of portFindings) {
-
-        addFinding(
-            finding,
-            10,
-            "Port"
-        );
+    for (const finding of detectSuspiciousPort(url)) {
+        addFinding(finding, 10, "Port");
     }
 
     // REDIRECTS
@@ -798,15 +721,10 @@ function scan() {
         detectRedirectParameters(url);
 
     for (const finding of redirectFindings) {
-
-        addFinding(
-            finding,
-            20,
-            "Redirect"
-        );
+        addFinding(finding, 20, "Redirect");
     }
 
-    // FINAL RISK SCORE
+    // RISK SCORE
 
     const score = calculateRisk(findings);
 
@@ -826,7 +744,6 @@ function scan() {
         "POLICE CYBER LAB 3.6\n" +
         "ADVANCED THREAT DETECTION\n" +
         "--------------------------------\n" +
-
         "Hostname: " + host + "\n" +
         "Subdomain: " + domainInfo.subdomain + "\n" +
         "Root Domain: " + domainInfo.rootDomain + "\n" +
@@ -839,37 +756,30 @@ function scan() {
         "Assessment: " + status + "\n\n" +
 
         "LOOKALIKE ANALYSIS:\n" +
-
         (lookalikes.length
             ? lookalikes.map(item =>
-                item.brand +
-                " | " +
-                item.label +
-                " | " +
+                item.brand + " | " +
+                item.label + " | " +
                 item.score + "%"
             ).join("\n")
             : "No known brand lookalike detected.") +
 
         "\n\nUNICODE ANALYSIS:\n" +
-
         (unicodeFindings.length
             ? unicodeFindings.join("\n")
             : "No raw Unicode hostname indicator detected.") +
 
         "\n\nPUNYCODE ANALYSIS:\n" +
-
         (detectPunycode(host)
             ? "Punycode hostname detected."
             : "No Punycode hostname detected.") +
 
         "\n\nREDIRECT ANALYSIS:\n" +
-
         (redirectFindings.length
             ? redirectFindings.join("\n")
             : "No external redirect indicator detected.") +
 
         "\n\nSECURITY FINDINGS:\n" +
-
         (findings.length
             ? findings.map(f =>
                 "[" + f.category + "] " +
@@ -884,9 +794,10 @@ function scan() {
         "No personal information was transmitted.\n" +
         "This scanner cannot guarantee website safety.\n" +
         "A warning indicator is not proof of malicious intent.\n" +
-        "Punycode and Unicode detection are indicators, not proof of impersonation.\n" +
-        "Redirect detection does not prove an exploitable vulnerability.\n" +
-        "Port detection does not verify that a service is open.";
+        "Punycode and Unicode detection are indicators only.\n" +
+        "Redirect detection does not prove a vulnerability.\n" +
+        "Port detection does not verify an open service.\n" +
+        "Root domain parsing uses a limited suffix list.";
 
     result.textContent = report;
 
@@ -947,7 +858,7 @@ function runAutomatedTests() {
         },
 
         {
-            name: "Brand in Malicious Subdomain",
+            name: "Malicious Subdomain Detection",
             run: () =>
                 detectLookalikes("paypal.evil.test").length > 0
         },
@@ -983,4 +894,174 @@ function runAutomatedTests() {
         {
             name: "Special Domain Suffix",
             run: () => {
-      
+                const d = analyzeDomain("shop.example.co.uk");
+
+                return d.rootDomain === "example.co.uk" &&
+                    d.subdomain === "shop";
+            }
+        },
+
+        {
+            name: "Unicode Detection",
+            run: () =>
+                detectUnicodeHost("https://раypal.com").length > 0
+        },
+
+        {
+            name: "Punycode Detection",
+            run: () =>
+                detectPunycode("xn--example-9d0
+                                           run: () =>
+                detectPunycode("xn--example-9d0.com") === true
+        },
+
+        {
+            name: "URL Obfuscation Detection",
+            run: () =>
+                detectObfuscation("https://example.com/%2F%2F").length > 0
+        },
+
+        {
+            name: "IPv4 Detection",
+            run: () =>
+                detectIPAddress("192.168.1.1") === true
+        },
+
+        {
+            name: "Invalid IPv4 Rejection",
+            run: () =>
+                detectIPAddress("999.999.999.999") === false
+        },
+
+        {
+            name: "Credential Detection",
+            run: () =>
+                detectCredentials(
+                    new URL("https://user:pass@example.com")
+                ) === true
+        },
+
+        {
+            name: "External Redirect Detection",
+            run: () =>
+                detectRedirectParameters(
+                    new URL("https://example.com/?redirect=https://evil.com")
+                ).length > 0
+        },
+
+        {
+            name: "Suspicious Port Detection",
+            run: () =>
+                detectSuspiciousPort(
+                    new URL("https://example.com:9090")
+                ).length > 0
+        },
+
+        {
+            name: "Risk Score Calculation",
+            run: () =>
+                calculateRisk([
+                    { title: "Test", points: 20 }
+                ]) === 20
+        }
+
+    ];
+
+    let passed = 0;
+    let failed = 0;
+
+    let testReport =
+        "POLICE CYBER LAB 3.6\n" +
+        "AUTOMATED TEST SYSTEM 3.0\n" +
+        "--------------------------------\n\n";
+
+    tests.forEach(test => {
+
+        try {
+
+            if (test.run()) {
+
+                passed++;
+
+                testReport += "PASS | " + test.name + "\n";
+
+            } else {
+
+                failed++;
+
+                testReport += "FAIL | " + test.name + "\n";
+            }
+
+        } catch (error) {
+
+            failed++;
+
+            testReport +=
+                "ERROR | " + test.name +
+                " | " + error.message + "\n";
+        }
+    });
+
+    testReport +=
+        "\n--------------------------------\n" +
+        "TOTAL TESTS: " + tests.length + "\n" +
+        "PASSED: " + passed + "\n" +
+        "FAILED: " + failed + "\n" +
+        "STATUS: " +
+        (failed === 0 ? "ALL TESTS PASSED" : "CHECK FAILED TESTS");
+
+    report = testReport;
+
+    const result = document.getElementById("result");
+
+    result.textContent = testReport;
+
+    result.className = failed === 0 ? "safe" : "warning";
+}
+
+// =====================================
+// CLEAR SCAN
+// =====================================
+
+function clearScan() {
+
+    document.getElementById("urlInput").value = "";
+
+    report = "";
+
+    const result = document.getElementById("result");
+
+    result.textContent = "POLICE CYBER LAB 3.6\nSCANNER READY...";
+
+    result.className = "safe";
+}
+
+// =====================================
+// COPY REPORT
+// =====================================
+
+async function copyReport() {
+
+    if (!report) {
+
+        alert("NO REPORT AVAILABLE!");
+
+        return;
+    }
+
+    try {
+
+        await navigator.clipboard.writeText(report);
+
+        alert("REPORT COPIED SUCCESSFULLY!");
+
+    } catch (error) {
+
+        alert("COPY FAILED. PLEASE COPY THE REPORT MANUALLY.");
+    }
+}
+
+</script>
+
+</body>
+</html>
