@@ -420,59 +420,92 @@ function isOfficialDomain(hostname, brand) {
 
 function detectBrandImpersonation(hostname) {
 
-    const labels = hostname.toLowerCase().split(".");
     const findings = [];
 
-    for (const brand of BRANDS) {
+    const labels = hostname.toLowerCase().split(".");
 
-        if (isOfficialDomain(hostname, brand)) {
+    for (const brand in protectedBrands) {
+
+        const officialDomains = protectedBrands[brand];
+
+        const isOfficial = officialDomains.some(domain =>
+            hostname === domain ||
+            hostname.endsWith("." + domain)
+        );
+
+        if (isOfficial) {
             continue;
         }
 
         for (const label of labels) {
 
-            const normalized = normalizeDomain(label);
-            const distance = editDistance(normalized, brand);
+            if (label === brand) {
 
-            const similarity = Math.round(
-                (1 - distance / Math.max(normalized.length, brand.length)) * 100
+                findings.push({
+                    type: "Brand Impersonation",
+                    message:
+                        "Brand name '" + brand +
+                        "' appears on an unofficial domain."
+                });
+
+                break;
+            }
+
+            const normalizedLabel =
+                normalizeDomain(label);
+
+            const normalizedBrand =
+                normalizeDomain(brand);
+
+            const distance = levenshteinDistance(
+                normalizedLabel,
+                normalizedBrand
             );
 
-            if (normalized === brand) {
+            // Exact normalized lookalike
+            if (
+                normalizedLabel === normalizedBrand &&
+                label !== brand
+            ) {
 
                 findings.push({
-                    brand,
-                    type: "Normalized brand match",
-                    similarity: 100
+                    type: "Lookalike domain",
+                    message:
+                        "Possible lookalike spelling for '" +
+                        brand + "'."
                 });
 
                 break;
             }
 
+            // Similar spelling
             if (
-                distance === 1 &&
-                normalized.length >= 4 &&
-                similarity >= 80
+                label.length >= 4 &&
+                distance > 0 &&
+                distance <= 1
             ) {
 
                 findings.push({
-                    brand,
-                    type: "Possible lookalike",
-                    similarity
+                    type: "Lookalike domain",
+                    message:
+                        "Similar spelling detected for brand '" +
+                        brand + "'."
                 });
 
                 break;
             }
 
+            // Brand name inside a longer hostname label
             if (
-                normalized.includes(brand) &&
-                normalized.length > brand.length
+                normalizedLabel.includes(normalizedBrand) &&
+                normalizedLabel.length > normalizedBrand.length
             ) {
 
                 findings.push({
-                    brand,
-                    type: "Brand keyword inside hostname",
-                    similarity
+                    type: "Brand Impersonation",
+                    message:
+                        "Brand name '" + brand +
+                        "' appears inside an unofficial hostname label."
                 });
 
                 break;
@@ -481,9 +514,9 @@ function detectBrandImpersonation(hostname) {
     }
 
     return findings;
-}
+    }
 
-
+    
 /* ---------- PUNYCODE DETECTION ---------- */
 
 function detectPunycode(hostname) {
