@@ -507,6 +507,49 @@ function detectIPAddress(hostname) {
 }
 
 function detectSuspiciousPort(urlObject) {
+    // ======================================
+// VERSION 3.9
+// EXTERNAL REDIRECT DETECTION
+// ======================================
+
+function detectExternalRedirects(urlObject) {
+
+    const findings = [];
+
+    for (const [key, value] of urlObject.searchParams.entries()) {
+
+        if (
+            !suspiciousRedirectParameters.includes(
+                key.toLowerCase()
+            )
+        ) {
+            continue;
+        }
+
+        try {
+
+            const target = new URL(value, urlObject.origin);
+
+            if (
+                (target.protocol === "https:" ||
+                 target.protocol === "http:") &&
+                target.hostname !== urlObject.hostname
+            ) {
+
+                findings.push({
+                    parameter: key,
+                    destination: target.hostname
+                });
+
+            }
+
+        } catch (error) {
+            continue;
+        }
+    }
+
+    return findings;
+    }
 
     const port = urlObject.port;
 
@@ -568,7 +611,7 @@ function calculateRisk(findings) {
         lookalike: 35,
         brandImpersonation: 35,
         insecureProtocol: 15
-
+        externalRedirect: 20,
     };
 
     for (const finding of findings) {
@@ -679,7 +722,18 @@ function analyzeURL(input) {
             redirects.join(", ")
         );
     }
+const externalRedirects = detectExternalRedirects(parsedURL);
 
+if (externalRedirects.length > 0) {
+    findings.push("externalRedirect");
+
+    externalRedirects.forEach(item => {
+        messages.push(
+            "External redirect destination detected (" +
+            item.parameter + "): " + item.destination
+        );
+    });
+    }
     if (detectCredentials(parsedURL)) {
 
         findings.push("credentials");
@@ -1070,9 +1124,26 @@ function runAutomatedTests() {
             "lookalike",
             "brandImpersonation",
             "insecureProtocol"
+            "externalRedirect"
         ]) === 100
     );
+    // VERSION 3.9 - EXTERNAL REDIRECT TESTS
 
+    test("External Redirect Detection", () =>
+        detectExternalRedirects(
+            new URL(
+                "https://example.com/?redirect=https%3A%2F%2Fevil.test"
+            )
+        ).length === 1
+    );
+
+    test("Internal Redirect Rejection", () =>
+        detectExternalRedirects(
+            new URL(
+                "https://example.com/?redirect=%2Flogin"
+            )
+        ).length === 0
+    );
     // RESULTS
 
     const passed =
