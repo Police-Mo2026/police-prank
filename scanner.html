@@ -116,8 +116,20 @@ function getRawHostname(input) {
   }
 }
 function detectUnicodeHost(rawInput) {
-  const host=getRawHostname(rawInput);
-  return host && /[^\x00-\x7F]/.test(host) ? ["Non-ASCII Unicode characters found in hostname."] : [];
+  let value=String(rawInput).trim();
+  if(!/^[a-z][a-z0-9+.-]*:\/\//i.test(value)) value="https://"+value;
+  const match=value.match(/^[a-z][a-z0-9+.-]*:\/\/([^/?#]*)/i);
+  if(!match) return [];
+
+  // Inspect the original hostname BEFORE URL() converts Unicode domains to Punycode.
+  let authority=match[1].split("@").pop();
+  let host=authority;
+  if(host.startsWith("[")) return []; // IPv6 literal
+  const colon=host.lastIndexOf(":");
+  if(colon!==-1 && /^\d+$/.test(host.slice(colon+1))) host=host.slice(0,colon);
+
+  return /[^\x00-\x7F]/.test(host)
+    ? ["Non-ASCII Unicode characters found in hostname."] : [];
 }
 function detectPunycode(host) {
   return String(host).toLowerCase().split(".").some(label=>label.startsWith("xn--"));
@@ -273,5 +285,5 @@ async function copyReport(){
 }
 </script>
 </body>
-    </html>
-    
+  </html>
+  
