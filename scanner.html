@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>POLICE CYBER LAB 3.4</title>
+<title>POLICE CYBER LAB 3.5</title>
 
 <style>
+* { box-sizing: border-box; }
+
 body {
     background: #080d16;
     color: #00ff99;
@@ -24,14 +26,13 @@ body {
 }
 
 input {
-    width: 90%;
+    width: 95%;
     padding: 13px;
     margin: 15px 0;
     border-radius: 7px;
     border: 1px solid #00ff99;
     background: #101a27;
     color: white;
-    box-sizing: border-box;
 }
 
 button {
@@ -55,43 +56,31 @@ pre {
 .warning { color: orange; }
 .danger { color: #ff4444; }
 
-h1 {
-    text-shadow: 0 0 12px #00ff99;
-}
-
-h3 {
-    color: #00ff99;
-}
+h1 { text-shadow: 0 0 12px #00ff99; }
+h3 { color: #00ff99; }
 </style>
 </head>
 
 <body>
 
 <h1>POLICE CYBER LAB</h1>
-<h3>LINK SECURITY SCANNER 3.4</h3>
+<h3>LINK SECURITY SCANNER 3.5</h3>
 
 <div class="box">
 
 <p>AUTHORIZED SECURITY ANALYSIS</p>
 
-<input
-type="text"
-id="urlInput"
-placeholder="Enter website URL..."
->
+<input type="text" id="urlInput"
+placeholder="Enter website URL...">
 
 <br>
 
 <button onclick="scan()">START SCAN</button>
 <button onclick="clearScan()">CLEAR</button>
-
-<button onclick="runAutomatedTests()">
-RUN AUTO TESTS
-</button>
+<button onclick="runAutomatedTests()">RUN AUTO TESTS</button>
+<button onclick="copyReport()">COPY REPORT</button>
 
 <pre id="result">Scanner ready...</pre>
-
-<button onclick="copyReport()">COPY REPORT</button>
 
 </div>
 
@@ -108,8 +97,10 @@ const trustedBrands = {
     apple: "apple.com"
 };
 
-
+// =================================
 // DOMAIN ANALYSIS
+// =================================
+
 function analyzeDomain(host) {
 
     const parts = host.split(".");
@@ -138,13 +129,15 @@ function analyzeDomain(host) {
 
     return {
         hostname: host,
-        subdomain: subdomain,
-        rootDomain: rootDomain
+        subdomain,
+        rootDomain
     };
 }
 
-
+// =================================
 // DOMAIN NORMALIZATION
+// =================================
+
 function normalizeDomain(value) {
 
     return value.toLowerCase()
@@ -155,8 +148,10 @@ function normalizeDomain(value) {
         .replace(/-/g, "");
 }
 
-
+// =================================
 // EDIT DISTANCE
+// =================================
+
 function editDistance(a, b) {
 
     let matrix = [];
@@ -170,7 +165,6 @@ function editDistance(a, b) {
     }
 
     for (let i = 1; i <= a.length; i++) {
-
         for (let j = 1; j <= b.length; j++) {
 
             let cost = a[i - 1] === b[j - 1] ? 0 : 1;
@@ -186,12 +180,13 @@ function editDistance(a, b) {
     return matrix[a.length][b.length];
 }
 
-
+// =================================
 // SIMILARITY
+// =================================
+
 function similarity(a, b) {
 
     const distance = editDistance(a, b);
-
     const maxLength = Math.max(a.length, b.length);
 
     if (maxLength === 0) return 100;
@@ -201,12 +196,13 @@ function similarity(a, b) {
     );
 }
 
-
+// =================================
 // LOOKALIKE DETECTION
+// =================================
+
 function detectLookalikes(host) {
 
     const findings = [];
-
     const labels = host.split(".");
 
     for (const [brand, officialDomain] of Object.entries(trustedBrands)) {
@@ -222,7 +218,6 @@ function detectLookalikes(host) {
             if (label.length < 4) continue;
 
             const normalizedLabel = normalizeDomain(label);
-
             const normalizedBrand = normalizeDomain(brand);
 
             const score = similarity(
@@ -236,9 +231,9 @@ function detectLookalikes(host) {
             ) {
 
                 findings.push({
-                    brand: brand,
-                    label: label,
-                    score: score
+                    brand,
+                    label,
+                    score
                 });
 
                 break;
@@ -249,12 +244,84 @@ function detectLookalikes(host) {
     return findings;
 }
 
+// =================================
+// URL OBFUSCATION DETECTION 1.0
+// =================================
 
+function detectObfuscation(rawInput) {
+
+    const findings = [];
+    const raw = rawInput.toLowerCase();
+
+    if (/%(?:2f|5c|40|2e|3a)/i.test(raw)) {
+        findings.push("Encoded URL delimiter detected.");
+    }
+
+    if (rawInput.includes("\\")) {
+        findings.push("Backslash detected in URL.");
+    }
+
+    if (/%25(?:2f|5c|40|2e|3a)/i.test(raw)) {
+        findings.push("Possible double URL encoding detected.");
+    }
+
+    if (/[\u0000-\u001F\u007F]/.test(rawInput)) {
+        findings.push("Control characters detected.");
+    }
+
+    const encodedCount =
+        (raw.match(/%[0-9a-f]{2}/g) || []).length;
+
+    if (encodedCount >= 5) {
+        findings.push("Excessive percent encoding detected.");
+    }
+
+    return findings;
+}
+
+// =================================
+// IP ADDRESS DETECTION
+// =================================
+
+function detectIPAddress(host) {
+
+    const parts = host.split(".");
+
+    if (parts.length !== 4) return false;
+
+    return parts.every(part =>
+        /^\d{1,3}$/.test(part) &&
+        Number(part) >= 0 &&
+        Number(part) <= 255
+    );
+}
+
+// =================================
+// SUSPICIOUS PORT DETECTION
+// =================================
+
+function detectSuspiciousPort(url) {
+
+    const port = url.port;
+
+    if (!port) return [];
+
+    const commonPorts = ["80", "443", "8080", "8443"];
+
+    if (!commonPorts.includes(port)) {
+        return ["Uncommon destination port: " + port];
+    }
+
+    return [];
+}
+
+// =================================
 // MAIN SCANNER
+// =================================
+
 function scan() {
 
     const input = document.getElementById("urlInput").value.trim();
-
     const result = document.getElementById("result");
 
     if (!input) {
@@ -268,8 +335,8 @@ function scan() {
 
         url = new URL(
             /^https?:\/\//i.test(input)
-            ? input
-            : "https://" + input
+                ? input
+                : "https://" + input
         );
 
         if (!["http:", "https:"].includes(url.protocol)) {
@@ -286,18 +353,15 @@ function scan() {
     let score = 0;
 
     const host = url.hostname.toLowerCase();
-
-    const raw = input.toLowerCase();
-
     const domainInfo = analyzeDomain(host);
 
-    // LOOKALIKE DETECTION
+    // LOOKALIKE
     const lookalikes = detectLookalikes(host);
 
     for (const item of lookalikes) {
 
         risks.push(
-            "POSSIBLE LOOKALIKE DOMAIN: " +
+            "POSSIBLE LOOKALIKE: " +
             item.label +
             " | Brand: " +
             item.brand +
@@ -308,122 +372,120 @@ function scan() {
         score += 35;
     }
 
-    // HTTPS CHECK
+    // OBFUSCATION
+    const obfuscationFindings = detectObfuscation(input);
+
+    for (const finding of obfuscationFindings) {
+        risks.push(finding);
+        score += 15;
+    }
+
+    // HTTPS
     if (url.protocol !== "https:") {
-
         risks.push("HTTP connection detected.");
-
         score += 20;
     }
 
-    // CREDENTIAL CHECK
+    // CREDENTIALS
     if (url.username || url.password) {
-
         risks.push("Embedded credentials detected.");
-
         score += 25;
     }
 
-    // IDN CHECK
+    // PUNYCODE
     if (host.includes("xn--")) {
-
         risks.push("Internationalized domain detected.");
-
         score += 20;
     }
 
-    // IP ADDRESS CHECK
-    if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(host)) {
-
+    // IP ADDRESS
+    if (detectIPAddress(host)) {
         risks.push("IP address used instead of domain.");
-
         score += 20;
     }
 
-    // SUBDOMAIN CHECK
+    // SUBDOMAIN
     if (
         domainInfo.subdomain !== "None" &&
         domainInfo.subdomain.split(".").length > 3
     ) {
-
         risks.push("Unusually many subdomains.");
-
         score += 10;
     }
 
     // SENSITIVE KEYWORDS
-    if (/login|verify|account|password|secure/.test(host)) {
-
+    if (/login|verify|account|password|secure/i.test(host)) {
         risks.push("Sensitive keywords in domain.");
-
         score += 15;
     }
 
-    // @ CHARACTER CHECK
-    if (raw.includes("@")) {
-
-        risks.push("URL contains @ character.");
-
-        score += 15;
-    }
-
-    // URL SHORTENER CHECK
+    // URL SHORTENER
     if (/bit\.ly|tinyurl\.com|t\.co|cutt\.ly/i.test(host)) {
-
         risks.push("URL shortener detected.");
-
         score += 15;
     }
 
-    // URL LENGTH CHECK
+    // URL LENGTH
     if (url.href.length > 150) {
-
         risks.push("Unusually long URL.");
+        score += 10;
+    }
 
+    // PORT
+    const portFindings = detectSuspiciousPort(url);
+
+    for (const finding of portFindings) {
+        risks.push(finding);
         score += 10;
     }
 
     score = Math.min(score, 100);
 
-    let status =
+    const status =
         score >= 50 ? "HIGH RISK INDICATORS" :
         score >= 25 ? "CAUTION" :
         "NO BASIC WARNING DETECTED";
 
-    // REPORT
     report =
-        "POLICE CYBER LAB 3.4\n" +
+        "POLICE CYBER LAB 3.5\n" +
         "-------------------------\n" +
         "Hostname: " + domainInfo.hostname + "\n" +
         "Subdomain: " + domainInfo.subdomain + "\n" +
         "Root Domain: " + domainInfo.rootDomain + "\n" +
         "Protocol: " + url.protocol + "\n" +
+        "Port: " + (url.port || "Default") + "\n" +
         "Risk Score: " + score + "/100\n" +
         "Assessment: " + status + "\n\n" +
 
         "LOOKALIKE DETECTION:\n" +
 
         (lookalikes.length
-        ? lookalikes.map(item =>
-            item.brand + " | " +
-            item.label + " | " +
-            item.score + "% similarity"
-          ).join("\n")
-        : "No known brand lookalike detected.") +
+            ? lookalikes.map(item =>
+                item.brand + " | " +
+                item.label + " | " +
+                item.score + "%"
+            ).join("\n")
+            : "No known brand lookalike detected.") +
+
+        "\n\nURL OBFUSCATION ANALYSIS:\n" +
+
+        (obfuscationFindings.length
+            ? obfuscationFindings.join("\n")
+            : "No basic obfuscation indicators detected.") +
 
         "\n\nSECURITY FINDINGS:\n" +
 
         (risks.length
-        ? risks.join("\n")
-        : "No basic warning indicators found.") +
+            ? risks.join("\n")
+            : "No basic warning indicators found.") +
 
         "\n\nIMPORTANT:\n" +
-        "This is a local heuristic analysis.\n" +
-        "It does not confirm whether a website is safe.\n" +
+        "Local heuristic analysis only.\n" +
         "No external website was contacted.\n" +
         "No personal information was transmitted.\n" +
-        "Similarity is not proof of malicious intent.\n" +
-        "Root domain detection is an approximation.";
+        "This scanner cannot guarantee website safety.\n" +
+        "A warning indicator is not proof of malicious intent.\n" +
+        "Port detection does not verify that a service is open.";
 
     result.textContent = report;
 
@@ -433,9 +495,8 @@ function scan() {
         "safe";
 }
 
-
 // =================================
-// AUTOMATED TEST SYSTEM 1.0
+// AUTOMATED TEST SYSTEM 2.0
 // =================================
 
 function runAutomatedTests() {
@@ -492,9 +553,54 @@ function runAutomatedTests() {
             run: () => {
                 const d = analyzeDomain("shop.example.com");
 
-                return d.rootDomain === "example.com"
-                    && d.subdomain === "shop";
+                return d.rootDomain === "example.com" &&
+                    d.subdomain === "shop";
             }
+        },
+
+        {
+            name: "Encoded Delimiter Detection",
+            run: () => detectObfuscation(
+                "https://example.com/%2Fadmin"
+            ).length > 0
+        },
+
+        {
+            name: "Backslash Detection",
+            run: () => detectObfuscation(
+                "https://example.com\\admin"
+            ).some(x => x.includes("Backslash"))
+        },
+
+        {
+            name: "Normal URL Check",
+            run: () => detectObfuscation(
+                "https://example.com"
+            ).length === 0
+        },
+
+        {
+            name: "Valid IPv4 Detection",
+            run: () => detectIPAddress("192.168.1.1")
+        },
+
+        {
+            name: "Invalid IPv4 Rejection",
+            run: () => !detectIPAddress("999.999.999.999")
+        },
+
+        {
+            name: "Suspicious Port Detection",
+            run: () => detectSuspiciousPort(
+                new URL("https://example.com:4444")
+            ).length === 1
+        },
+
+        {
+            name: "Default HTTPS Port",
+            run: () => detectSuspiciousPort(
+                new URL("https://example.com")
+            ).length === 0
         }
 
     ];
@@ -508,9 +614,7 @@ function runAutomatedTests() {
 
         try {
 
-            const success = test.run();
-
-            if (success) {
+            if (test.run()) {
                 passed++;
                 results.push("PASS | " + test.name);
             } else {
@@ -527,8 +631,8 @@ function runAutomatedTests() {
     }
 
     report =
-        "POLICE CYBER LAB 3.4\n" +
-        "AUTOMATED TEST SYSTEM 1.0\n" +
+        "POLICE CYBER LAB 3.5\n" +
+        "AUTOMATED TEST SYSTEM 2.0\n" +
         "-----------------------------\n\n" +
         results.join("\n") +
         "\n\n-----------------------------\n" +
@@ -541,12 +645,13 @@ function runAutomatedTests() {
     const result = document.getElementById("result");
 
     result.textContent = report;
-
     result.className = failed === 0 ? "safe" : "danger";
 }
 
+// =================================
+// CLEAR
+// =================================
 
-// CLEAR SCAN
 function clearScan() {
 
     document.getElementById("urlInput").value = "";
@@ -554,14 +659,15 @@ function clearScan() {
     const result = document.getElementById("result");
 
     result.textContent = "Scanner ready...";
-
     result.className = "";
 
     report = "";
 }
 
-
+// =================================
 // COPY REPORT
+// =================================
+
 function copyReport() {
 
     if (!report) {
@@ -570,8 +676,8 @@ function copyReport() {
     }
 
     navigator.clipboard.writeText(report)
-    .then(() => alert("Report copied!"))
-    .catch(() => alert("Copy manually."));
+        .then(() => alert("Report copied!"))
+        .catch(() => alert("Copy manually."));
 }
 
 </script>
