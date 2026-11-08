@@ -411,17 +411,17 @@ function isIPv4(host) {
 
 function detectLookalike(domain) {
 
-    const root = domain.split(".")[0];
+    const root = domain.split(".")[0].toLowerCase();
 
     const findings = [];
 
-const substitutions = {
-    "0": "o",
-    "1": "l",
-    "3": "e",
-    "5": "s",
-    "7": "t"
-};
+    const substitutions = {
+        "0": "o",
+        "1": "l",
+        "3": "e",
+        "5": "s",
+        "7": "t"
+    };
 
     let normalized = root;
 
@@ -430,19 +430,24 @@ const substitutions = {
     }
 
     for (const brand of PROTECTED_BRANDS) {
+
         if (
-            normalized !== brand &&
-            levenshtein(normalized, brand) <= 2
+            root !== brand &&
+            (
+                normalized === brand ||
+                levenshtein(root, brand) <= 2
+            )
         ) {
             findings.push({
                 brand,
                 type: "Possible lookalike domain"
             });
         }
+
     }
 
     return findings;
-}
+    }
 
 /* ==================================
    BRAND IMPERSONATION
