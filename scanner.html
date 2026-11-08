@@ -3,20 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080d16">
-<title>POLICE CYBER LAB 3.9.1</title>
+
+<title>POLICE CYBER LAB 4.0</title>
 
 <style>
 :root {
-    --bg: #080d16;
-    --panel: #101a28;
-    --border: #20364a;
+    --bg: #080d17;
+    --panel: #111c2e;
+    --border: #263a52;
     --green: #00ff99;
-    --blue: #00c8ff;
-    --red: #ff465c;
-    --yellow: #ffc857;
-    --text: #dce8f2;
-    --muted: #8da3b8;
+    --blue: #00bfff;
+    --red: #ff4545;
+    --yellow: #ffcc00;
+    --text: #e7f0ff;
 }
 
 * {
@@ -32,172 +31,139 @@ body {
 }
 
 .container {
-    max-width: 850px;
+    max-width: 950px;
     margin: auto;
 }
 
 header {
     text-align: center;
-    padding: 22px 10px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 22px;
+    padding: 25px 10px;
 }
 
-.logo {
+header h1 {
     color: var(--green);
+    letter-spacing: 2px;
     font-size: 27px;
-    font-weight: bold;
+}
+
+header p {
+    color: var(--blue);
     letter-spacing: 2px;
 }
 
-.subtitle {
-    color: var(--blue);
-    font-size: 14px;
-    margin-top: 9px;
-    letter-spacing: 1px;
-}
-
-.version {
+.badge {
     display: inline-block;
-    color: var(--green);
     border: 1px solid var(--green);
-    padding: 5px 12px;
+    color: var(--green);
+    padding: 7px 15px;
     border-radius: 20px;
-    margin-top: 12px;
     font-size: 12px;
 }
 
 .panel {
     background: var(--panel);
     border: 1px solid var(--border);
+    padding: 20px;
     border-radius: 12px;
-    padding: 18px;
     margin-bottom: 18px;
-}
-
-h2 {
-    color: var(--green);
-    font-size: 18px;
-    margin-top: 0;
 }
 
 input {
     width: 100%;
     padding: 15px;
-    border-radius: 8px;
+    background: #080d17;
     border: 1px solid var(--border);
-    background: #070c13;
+    border-radius: 8px;
     color: white;
     font-size: 15px;
-    outline: none;
-}
-
-input:focus {
-    border-color: var(--green);
-}
-
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 13px;
+    margin: 12px 0;
 }
 
 button {
-    padding: 13px 8px;
+    padding: 12px 16px;
     border: none;
     border-radius: 7px;
-    font-weight: bold;
     cursor: pointer;
-    font-size: 13px;
+    font-weight: bold;
+    margin: 4px;
 }
 
-button:active {
-    transform: scale(.98);
-}
-
-.scan-btn {
+.primary {
     background: var(--green);
     color: #00150c;
 }
 
-.clear-btn {
-    background: #26394d;
+.secondary {
+    background: var(--blue);
+    color: #00101a;
+}
+
+.danger {
+    background: var(--red);
     color: white;
 }
 
-.test-btn {
-    background: #006b94;
-    color: white;
+button:hover {
+    opacity: .85;
 }
 
-.copy-btn {
-    background: #7954c7;
-    color: white;
-}
-
-.report {
-    background: #050a10;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 16px;
-    min-height: 180px;
-    overflow-wrap: anywhere;
-    white-space: pre-wrap;
-    font-family: monospace;
-    font-size: 13px;
-    line-height: 1.7;
-}
-
-.good {
-    color: var(--green);
-}
-
-.bad {
-    color: var(--red);
-}
-
-.warning {
-    color: var(--yellow);
-}
-
-.info {
-    color: var(--blue);
-}
-
-.muted {
-    color: var(--muted);
-}
-
-.test-summary {
-    margin-top: 12px;
-    padding: 12px;
-    border: 1px solid var(--border);
+.result {
+    background: #080d17;
+    padding: 15px;
     border-radius: 8px;
-    line-height: 1.8;
+    margin-top: 12px;
+    overflow-wrap: anywhere;
+}
+
+.score {
+    font-size: 38px;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+}
+
+.green { color: var(--green); }
+.yellow { color: var(--yellow); }
+.red { color: var(--red); }
+
+.finding {
+    border-left: 4px solid var(--yellow);
+    padding: 10px;
+    background: #182438;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.finding.high {
+    border-left-color: var(--red);
+}
+
+.finding.info {
+    border-left-color: var(--blue);
+}
+
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: #b9d5ef;
+    line-height: 1.5;
+}
+
+small {
+    color: #8da5bf;
 }
 
 footer {
     text-align: center;
-    color: var(--muted);
+    color: #71859c;
+    padding: 20px;
     font-size: 12px;
-    padding: 20px 5px;
-    line-height: 1.8;
 }
 
-@media(max-width: 450px) {
-    body {
-        padding: 12px;
-    }
-
-    .logo {
-        font-size: 22px;
-    }
-
-    button {
-        font-size: 12px;
-    }
+.hidden {
+    display: none;
 }
+
 </style>
 </head>
 
@@ -206,160 +172,132 @@ footer {
 <div class="container">
 
 <header>
-    <div class="logo">POLICE CYBER LAB</div>
-    <div class="subtitle">LINK SECURITY SCANNER</div>
-    <div class="version">VERSION 3.9.1</div>
+    <h1>POLICE CYBER LAB</h1>
+    <p>LINK SECURITY SCANNER 4.0</p>
+    <span class="badge">AUTHORIZED SECURITY ANALYSIS</span>
 </header>
 
 <div class="panel">
-    <h2>AUTHORIZED SECURITY ANALYSIS</h2>
+
+    <h3>🌐 URL ANALYSIS</h3>
 
     <input
-        type="text"
         id="urlInput"
+        type="text"
         placeholder="Enter website URL..."
         autocomplete="off"
-        spellcheck="false"
     >
 
-    <div class="buttons">
-        <button class="scan-btn" onclick="startScan()">START SCAN</button>
-        <button class="clear-btn" onclick="clearAll()">CLEAR</button>
-        <button class="test-btn" onclick="runTests()">RUN AUTO TESTS</button>
-        <button class="copy-btn" onclick="copyReport()">COPY REPORT</button>
-    </div>
+    <button class="primary" onclick="startScan()">
+        START SCAN
+    </button>
+
+    <button class="secondary" onclick="clearAll()">
+        CLEAR
+    </button>
+
+    <button class="secondary" onclick="copyReport()">
+        COPY REPORT
+    </button>
+
+</div>
+
+<div id="output" class="panel hidden">
+
+    <h3>SECURITY REPORT</h3>
+
+    <div id="score" class="score">0/100</div>
+
+    <div id="assessment" class="result"></div>
+
+    <div id="details" class="result"></div>
+
+    <h3>SECURITY FINDINGS</h3>
+
+    <div id="findings"></div>
+
+    <h3>RECOMMENDATIONS</h3>
+
+    <div id="recommendations"></div>
+
 </div>
 
 <div class="panel">
-    <h2>SECURITY ANALYSIS REPORT</h2>
-    <div class="report" id="report">POLICE CYBER LAB 3.9.1
---------------------------------
-SYSTEM STATUS: READY
-Waiting for URL input...</div>
+
+    <h3>🧪 AUTOMATED TEST SYSTEM 4.0</h3>
+
+    <button class="primary" onclick="runTests()">
+        RUN ALL TESTS
+    </button>
+
+    <div id="testResults" class="result">
+        Waiting for tests...
+    </div>
+
 </div>
 
 <div class="panel">
-    <h2>AUTOMATED TEST SYSTEM 3.1</h2>
-    <div class="report" id="testReport">SYSTEM READY
-Press RUN AUTO TESTS to begin.</div>
-    <div class="test-summary" id="testSummary">
-        Tests have not been executed yet.
-    </div>
+    <h3>ABOUT THIS SCANNER</h3>
+
+    <p>
+        POLICE CYBER LAB 4.0 is a local URL
+        analysis tool designed to identify
+        suspicious URL patterns.
+    </p>
+
+    <small>
+        No external requests are made by this scanner.
+        Results are heuristic and do not guarantee
+        that a website is safe or malicious.
+    </small>
 </div>
 
 <footer>
-    POLICE CYBER LAB<br>
-    Authorized Security Analysis<br>
-    Local URL Analysis Only — No External Requests
+    POLICE CYBER LAB 4.0<br>
+    DEFENSIVE SECURITY RESEARCH
 </footer>
 
 </div>
 
 <script>
 
-/* =====================================
-   POLICE CYBER LAB 3.9.1
-   LINK SECURITY SCANNER
-===================================== */
+/* ==================================
+   POLICE CYBER LAB 4.0
+   CORE SECURITY ENGINE
+================================== */
 
-
-/* ---------- CONFIGURATION ---------- */
-
-const VERSION = "3.9.1";
-
-const BRANDS = [
+const PROTECTED_BRANDS = [
     "paypal",
     "google",
-    "amazon",
-    "apple",
-    "microsoft",
     "facebook",
+    "microsoft",
+    "apple",
+    "amazon",
     "instagram",
     "netflix",
-    "youtube",
-    "whatsapp"
+    "binance",
+    "telegram"
 ];
 
-const OFFICIAL_DOMAINS = {
-    paypal: ["paypal.com"],
-    google: ["google.com"],
-    amazon: ["amazon.com"],
-    apple: ["apple.com"],
-    microsoft: ["microsoft.com"],
-    facebook: ["facebook.com"],
-    instagram: ["instagram.com"],
-    netflix: ["netflix.com"],
-    youtube: ["youtube.com"],
-    whatsapp: ["whatsapp.com"]
-};
+const SUSPICIOUS_TLDS = [
+    "zip",
+    "mov",
+    "top",
+    "click",
+    "work",
+    "country",
+    "gq",
+    "tk"
+];
 
 let lastReport = "";
 
 
-/* ---------- URL PARSER ---------- */
+/* ==================================
+   STRING DISTANCE
+================================== */
 
-function parseTargetURL(input) {
-
-    if (typeof input !== "string" || !input.trim()) {
-        throw new Error("Empty URL");
-    }
-
-    let value = input.trim();
-
-    if (/\s/.test(value)) {
-        throw new Error("Spaces are not allowed in the URL");
-    }
-
-    if (value.startsWith("//")) {
-        value = "https:" + value;
-    } else if (!/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(value)) {
-        value = "https://" + value;
-    }
-
-    const parsed = new URL(value);
-
-    if (!["http:", "https:"].includes(parsed.protocol)) {
-        throw new Error("Only HTTP and HTTPS URLs are supported");
-    }
-
-    if (!parsed.hostname) {
-        throw new Error("Missing hostname");
-    }
-
-    return parsed;
-}
-
-
-/* ---------- DOMAIN INFORMATION ---------- */
-
-function getDomainInfo(hostname) {
-
-    const host = hostname.toLowerCase().replace(/\.$/, "");
-
-    const labels = host.split(".");
-
-        let rootApproximation = host;
-
-    if (labels.length >= 2) {
-        rootApproximation = labels.slice(-2).join(".");
-    }
-
-    return {
-        hostname: host,
-        subdomain: labels.length > 2
-            ? labels.slice(0, -2).join(".")
-            : "None",
-        rootDomainApproximation: rootApproximation
-    };
-}
-
-
-/* ---------- EDIT DISTANCE ---------- */
-
-function editDistance(a, b) {
-
-    a = String(a).toLowerCase();
-    b = String(b).toLowerCase();
+function levenshtein(a, b) {
 
     const matrix = [];
 
@@ -372,227 +310,133 @@ function editDistance(a, b) {
     }
 
     for (let i = 1; i <= b.length; i++) {
+
         for (let j = 1; j <= a.length; j++) {
 
-            const cost = a[j - 1] === b[i - 1] ? 0 : 1;
+            if (b[i - 1] === a[j - 1]) {
+                matrix[i][j] =
+                    matrix[i - 1][j - 1];
+            } else {
 
-            matrix[i][j] = Math.min(
-                matrix[i - 1][j] + 1,
-                matrix[i][j - 1] + 1,
-                matrix[i - 1][j - 1] + cost
-            );
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1,
+                    matrix[i][j - 1] + 1,
+                    matrix[i - 1][j] + 1
+                );
+
+            }
+
         }
+
     }
 
     return matrix[b.length][a.length];
 }
 
 
-/* ---------- DOMAIN NORMALIZATION ---------- */
+/* ==================================
+   URL PARSING
+================================== */
 
-function normalizeDomain(value) {
+function parseURL(input) {
 
-    return String(value)
-        .toLowerCase()
-        .replace(/[-_.]/g, "")
-        .replace(/0/g, "o")
-        .replace(/1/g, "l")
-        .replace(/3/g, "e")
-        .replace(/5/g, "s")
-        .replace(/7/g, "t");
-}
+    let value = input.trim();
 
-
-/* ---------- OFFICIAL DOMAIN CHECK ---------- */
-
-function isOfficialDomain(hostname, brand) {
-
-    const domains = OFFICIAL_DOMAINS[brand] || [];
-
-    return domains.some(domain =>
-        hostname === domain ||
-        hostname.endsWith("." + domain)
-    );
-}
-
-
-/* ---------- BRAND IMPERSONATION ---------- */
-/* ---------- BRAND IMPERSONATION ENGINE ---------- */
-
-function detectBrandImpersonation(hostname) {
-
-    const findings = [];
-    const labels = hostname.toLowerCase().split(".");
-
-    for (const brand of BRANDS) {
-
-        if (isOfficialDomain(hostname, brand)) {
-            continue;
-        }
-
-        for (const label of labels) {
-
-            const normalized = normalizeDomain(label);
-            const normalizedBrand = normalizeDomain(brand);
-
-            const distance = editDistance(
-                normalized,
-                normalizedBrand
-            );
-
-            const similarity = Math.round(
-                (1 - distance / Math.max(
-                    normalized.length,
-                    normalizedBrand.length
-                )) * 100
-            );
-
-            if (normalized === normalizedBrand) {
-
-                findings.push({
-                    brand: brand,
-                    type: label === brand
-                        ? "Brand Impersonation"
-                        : "Lookalike Domain",
-                    similarity: 100
-                });
-
-                break;
-            }
-
-            if (
-                distance === 1 &&
-                normalized.length >= 4 &&
-                similarity >= 80
-            ) {
-
-                findings.push({
-                    brand: brand,
-                    type: "Lookalike Domain",
-                    similarity: similarity
-                });
-
-                break;
-            }
-
-            if (
-                normalized.includes(normalizedBrand) &&
-                normalized.length > normalizedBrand.length
-            ) {
-
-                findings.push({
-                    brand: brand,
-                    type: "Brand Impersonation",
-                    similarity: similarity
-                });
-
-                break;
-            }
-        }
+    if (!/^https?:\/\//i.test(value)) {
+        value = "https://" + value;
     }
 
-    return findings;
+    const url = new URL(value);
+
+    if (!["http:", "https:"].includes(url.protocol)) {
+        throw new Error("Unsupported URL protocol");
     }
 
-    
-/* ---------- PUNYCODE DETECTION ---------- */
+    if (!url.hostname || !url.hostname.includes(".")) {
+        throw new Error("Invalid hostname");
+    }
 
-function detectPunycode(hostname) {
-
-    return hostname
-        .split(".")
-        .some(label => label.startsWith("xn--"));
+    return url;
 }
 
 
-/* ---------- SUSPICIOUS KEYWORDS ---------- */
+/* ==================================
+   DOMAIN INFORMATION
+================================== */
 
-function detectSuspiciousKeywords(urlObject) {
+function getDomainInfo(hostname) {
 
-    const text = (
-        urlObject.hostname + " " +
-        urlObject.pathname + " " +
-        urlObject.search
-    ).toLowerCase();
+    const host = hostname.toLowerCase();
 
-    const keywords = [
-        "login",
-        "verify",
-        "secure",
-        "account",
-        "password",
-        "wallet",
-        "banking",
-        "confirm",
-        "update",
-        "recovery"
-    ];
+    const parts = host.split(".");
 
-    return keywords.filter(keyword =>
-        text.includes(keyword)
+    return {
+        hostname: host,
+        subdomain: parts.length > 2
+            ? parts.slice(0, -2).join(".")
+            : "NONE",
+
+        rootDomain: parts.length >= 2
+            ? parts.slice(-2).join(".")
+            : host,
+
+        tld: parts[parts.length - 1]
+    };
+
+}
+
+
+/* ==================================
+   IP DETECTION
+================================== */
+
+function isIPv4(host) {
+
+    const parts = host.split(".");
+
+    if (parts.length !== 4) return false;
+
+    return parts.every(part =>
+        /^\d+$/.test(part) &&
+        Number(part) >= 0 &&
+        Number(part) <= 255
     );
+
 }
 
 
-/* ---------- CREDENTIAL DETECTION ---------- */
+/* ==================================
+   LOOKALIKE DETECTION
+================================== */
 
-function detectCredentials(urlObject) {
+function detectLookalike(domain) {
 
-    return Boolean(
-        urlObject.username ||
-        urlObject.password
-    );
-}
-
-
-/* ---------- EXTERNAL REDIRECT DETECTION ---------- */
-
-function detectExternalRedirects(urlObject) {
-
-    const redirectParameters = [
-        "redirect",
-        "redirect_uri",
-        "return",
-        "return_url",
-        "next",
-        "url",
-        "target",
-        "destination",
-        "continue",
-        "dest"
-    ];
+    const root = domain.split(".")[0];
 
     const findings = [];
 
-    for (const [key, value] of urlObject.searchParams.entries()) {
+    const substitutions = {
+        "0": "o",
+        "1": "l",
+        "3": "e",
+        "5": "s",
+        "7": "t
+                };
 
-        if (!redirectParameters.includes(key.toLowerCase())) {
-            continue;
-        }
+    let normalized = root;
 
-        try {
+    for (const [key, value] of Object.entries(substitutions)) {
+        normalized = normalized.replaceAll(key, value);
+    }
 
-            let destination;
-
-            if (value.startsWith("//")) {
-                destination = new URL("https:" + value);
-            } else {
-                destination = new URL(value, urlObject.origin);
-            }
-
-            if (destination.origin !== urlObject.origin) {
-
-                findings.push({
-                    parameter: key,
-                    destination: destination.hostname
-                });
-            }
-
-        } catch (error) {
-
+    for (const brand of PROTECTED_BRANDS) {
+        if (
+            normalized !== brand &&
+            levenshtein(normalized, brand) <= 2
+        ) {
             findings.push({
-                parameter: key,
-                destination: "Unparseable destination"
+                brand,
+                type: "Possible lookalike domain"
             });
         }
     }
@@ -600,505 +444,712 @@ function detectExternalRedirects(urlObject) {
     return findings;
 }
 
+/* ==================================
+   BRAND IMPERSONATION
+================================== */
 
-/* ---------- SUSPICIOUS PORT DETECTION ---------- */
+function detectBrandImpersonation(hostname) {
 
-function detectSuspiciousPort(urlObject) {
+    const findings = [];
+    const host = hostname.toLowerCase();
+    const parts = host.split(".");
 
-    const port = urlObject.port;
+    const root = parts.length >= 2
+        ? parts.slice(-2)[0]
+        : parts[0];
 
-    if (!port) {
-        return false;
+    for (const brand of PROTECTED_BRANDS) {
+        const appearsInHost = host.includes(brand);
+        const officialRoot = root === brand;
+
+        if (appearsInHost && !officialRoot) {
+            findings.push({
+                brand,
+                type: "Brand name outside registered root"
+            });
+        }
     }
 
-    const standardPorts = {
-        "80": true,
-        "443": true
-    };
+    return findings;
+}
 
-    return !standardPorts[port];
+/* ==================================
+   REDIRECT PARAMETER ANALYSIS
+================================== */
+
+function detectRedirectParameters(url) {
+
+    const findings = [];
+
+    const parameters = [
+        "redirect",
+        "redirect_url",
+        "return",
+        "return_url",
+        "next",
+        "continue",
+        "url",
+        "target"
+    ];
+
+    for (const key of parameters) {
+        const value = url.searchParams.get(key);
+
+        if (!value) continue;
+
+        try {
+            const decoded = decodeURIComponent(value);
+
+            if (
+                /^https?:\/\//i.test(decoded) ||
+                decoded.startsWith("//")
+            ) {
+                findings.push(
+                    "External destination parameter: " + key
+                );
+            }
+        } catch {
+            findings.push(
+                "Unusual redirect parameter: " + key
+            );
+        }
+    }
+
+    return findings;
+    }
+    /* ==================================
+   REDIRECT PARAMETER ANALYSIS
+================================== */
+
+function detectRedirectParameters(url) {
+
+    const findings = [];
+
+    const parameters = [
+        "redirect",
+        "redirect_url",
+        "return",
+        "return_url",
+        "next",
+        "continue",
+        "url",
+        "target"
+    ];
+
+    for (const key of parameters) {
+
+        const value = url.searchParams.get(key);
+
+        if (!value) continue;
+
+        try {
+
+            const decoded = decodeURIComponent(value);
+
+            if (
+                /^https?:\/\//i.test(decoded) ||
+                decoded.startsWith("//")
+            ) {
+
+                findings.push(
+                    "External destination parameter: " + key
+                );
+
+            }
+
+        } catch {
+
+            findings.push(
+                "Unusual redirect parameter: " + key
+            );
+
+        }
+
+    }
+
+    return findings;
 }
 
 
-/* ---------- URL ANALYSIS ---------- */
+/* ==================================
+   MAIN ANALYSIS ENGINE
+================================== */
 
-function analyzeURL(urlObject) {
-
-    const hostname = urlObject.hostname.toLowerCase();
-
-    const domainInfo = getDomainInfo(hostname);
-
-    const brandFindings =
-        detectBrandImpersonation(hostname);
-
-    const punycode =
-        detectPunycode(hostname);
-
-    const keywords =
-        detectSuspiciousKeywords(urlObject);
-
-    const credentials =
-        detectCredentials(urlObject);
-
-    const redirects =
-        detectExternalRedirects(urlObject);
-
-    const suspiciousPort =
-        detectSuspiciousPort(urlObject);
-
-    const isHTTP = urlObject.protocol === "http:";
+function analyzeURL(url) {
 
     let risk = 0;
 
     const findings = [];
+    const recommendations = [];
 
-    if (isHTTP) {
-        risk += 15;
+    const hostname = url.hostname.toLowerCase();
+
+    const info = getDomainInfo(hostname);
+
+    function addFinding(name, points, level) {
+
+        risk += points;
+
         findings.push({
-            name: "Insecure HTTP Protocol",
-            score: 15
+            name,
+            points,
+            level
         });
+
     }
+
+    if (url.protocol === "http:") {
+
+        addFinding("Unencrypted HTTP connection", 15, "medium");
+
+        recommendations.push("Prefer HTTPS connections.");
+
+    }
+
+    if (url.username || url.password) {
+
+        addFinding("Credentials embedded in URL", 25, "high");
+
+        recommendations.push("Never trust URLs containing embedded credentials.");
+
+    }
+
+    if (isIPv4(hostname)) {
+
+        addFinding("IP address used instead of domain name", 15, "medium");
+
+    }
+
+    if (hostname.includes("xn--")) {
+
+        addFinding("Punycode hostname detected", 20, "high");
+
+    }
+
+    if (SUSPICIOUS_TLDS.includes(info.tld)) {
+
+        addFinding("TLD associated with elevated abuse risk", 10, "medium");
+
+    }
+
+    if (hostname.split(".").length > 4) {
+
+        addFinding("Unusually deep subdomain structure", 10, "medium");
+
+    }
+
+    const keywords = [
+        "login", "verify", "account", "secure",
+        "password", "wallet", "update", "confirm",
+        "recovery"
+    ];
+
+    const hostAndPath =
+        (hostname + url.pathname).toLowerCase();
+
+    const matchedKeywords =
+        keywords.filter(word => hostAndPath.includes(word));
+
+    if (matchedKeywords.length >= 2) {
+
+        addFinding("Multiple sensitive keywords", 10, "medium");
+
+    }
+
+    const brandFindings = detectBrandImpersonation(hostname);
 
     if (brandFindings.length > 0) {
-        risk += 35;
-        findings.push({
-            name: "Possible Brand Impersonation",
-            score: 35
+
+        addFinding("Possible brand impersonation", 30, "high");
+
+        brandFindings.forEach(item => {
+
+            findings.push({
+                name: item.type + ": " + item.brand,
+                points: 0,
+                level: "high"
+            });
+
         });
+
+        recommendations.push("Verify the domain using the brand's official website.");
+
     }
 
-    if (punycode) {
-        risk += 25;
-        findings.push({
-            name: "Punycode / Internationalized Domain",
-            score: 25
+    const lookalikes = detectLookalike(hostname);
+
+    if (lookalikes.length > 0) {
+
+        addFinding("Possible lookalike domain", 30, "high");
+
+        lookalikes.forEach(item => {
+
+            findings.push({
+                name: item.type + ": " + item.brand,
+                points: 0,
+                level: "high"
+            });
+
         });
+
     }
 
-    if (keywords.length > 0) {
-        risk += 10;
-        findings.push({
-            name: "Sensitive Keywords Detected: " + keywords.join(", "),
-            score: 10
-        });
-    }
-
-    if (credentials) {
-        risk += 25;
-        findings.push({
-            name: "Credentials Embedded in URL",
-            score: 25
-        });
-    }
+    const redirects = detectRedirectParameters(url);
 
     if (redirects.length > 0) {
-        risk += 20;
-        findings.push({
-            name: "External Redirect Parameter",
-            score: 20
+
+        addFinding("Potential external redirect parameter", 15, "medium");
+
+        redirects.forEach(item => {
+
+            findings.push({
+                name: item,
+                points: 0,
+                level: "medium"
+            });
+
         });
+
     }
 
-    if (suspiciousPort) {
-        risk += 10;
-        findings.push({
-            name: "Non-Standard Port",
-            score: 10
-        });
+    if (url.href.length > 200) {
+
+        addFinding("Unusually long URL", 5, "low");
+
     }
 
-    risk = Math.min(risk, 100);
+    risk = Math.min(100, risk);
 
-    let assessment = "LOW RISK";
+    if (findings.length === 0) {
 
-    if (risk >= 60) {
-        assessment = "HIGH RISK";
-    } else if (risk >= 30) {
-        assessment = "CAUTION";
+        recommendations.push(
+            "No suspicious patterns were detected by local analysis."
+        );
+
     }
 
     return {
-        domainInfo,
-        brandFindings,
-        punycode,
-        keywords,
-        credentials,
-        redirects,
-        suspiciousPort,
-        isHTTP,
         risk,
-        assessment,
-        findings
+        findings,
+        recommendations,
+        info
     };
-}
 
-
-/* ---------- REPORT GENERATOR ---------- */
-
-function generateReport(urlObject, analysis) {
-
-    let output = "";
-
-    output += "POLICE CYBER LAB " + VERSION + "\n";
-    output += "LINK SECURITY SCANNER\n";
-    output += "--------------------------------\n\n";
-
-    output += "TARGET: " + urlObject.href + "\n";
-
-    output += "Hostname: " +
-        analysis.domainInfo.hostname + "\n";
-
-    output += "Subdomain: " +
-        analysis.domainInfo.subdomain + "\n";
-
-    output += "Root Domain Approximation: " +
-        analysis.domainInfo.rootDomainApproximation + "\n";
-
-    output += "Protocol: " +
-        urlObject.protocol + "\n";
-
-    output += "Port: " +
-        (urlObject.port || "Default") + "\n\n";
-
-    output += "RISK SCORE: " +
-        analysis.risk + "/100\n";
-
-    output += "ASSESSMENT: " +
-        analysis.assessment + "\n\n";
-
-    output += "SECURITY FINDINGS:\n";
-    output += "--------------------------------\n";
-
-    if (analysis.findings.length === 0) {
-        output += "No configured warning indicators detected.\n";
-    } else {
-        for (const finding of analysis.findings) {
-            output += "[!] " +
-                finding.name +
-                " (+" + finding.score + ")\n";
-        }
     }
-
-    output += "\nBRAND ANALYSIS:\n";
-
-    if (analysis.brandFindings.length === 0) {
-        output += "No configured brand lookalike detected.\n";
-    } else {
-        for (const item of analysis.brandFindings) {
-            output +=
-                item.brand.toUpperCase() +
-                " | " +
-                item.type +
-                " | Similarity: " +
-                item.similarity +
-                "%\n";
-        }
-    }
-
-    output += "\nPUNYCODE: " +
-        (analysis.punycode ? "DETECTED" : "NOT DETECTED") + "\n";
-
-    output += "CREDENTIALS IN URL: " +
-        (analysis.credentials ? "DETECTED" : "NOT DETECTED") + "\n";
-
-    output += "EXTERNAL REDIRECTS: " +
-        analysis.redirects.length + "\n";
-
-    for (const redirect of analysis.redirects) {
-        output +=
-            " - " +
-            redirect.parameter +
-            " -> " +
-            redirect.destination +
-            "\n";
-    }
-
-    output += "\nIMPORTANT:\n";
-    output += "This tool performs local heuristic analysis only.\n";
-    output += "It does not connect to or verify the target website.\n";
-    output += "A low score does NOT guarantee that a website is safe.\n";
-
-    output += "\n--------------------------------\n";
-    output += "POLICE CYBER LAB - END OF REPORT\n";
-
-    return output;
-}
-
-
-/* ---------- START SCAN ---------- */
+    /* ==================================
+   SCAN EXECUTION
+================================== */
 
 function startScan() {
 
-    const input =
-        document.getElementById("urlInput").value;
+    const input = document.getElementById("urlInput").value;
 
-    const report =
-        document.getElementById("report");
+    const output = document.getElementById("output");
+    const findingsBox = document.getElementById("findings");
+    const details = document.getElementById("details");
+    const scoreBox = document.getElementById("score");
+    const assessment = document.getElementById("assessment");
+    const recommendations = document.getElementById("recommendations");
+
+    findingsBox.innerHTML = "";
+    details.innerHTML = "";
+    recommendations.innerHTML = "";
 
     try {
 
-        const urlObject = parseTargetURL(input);
+        const url = parseURL(input);
+        const result = analyzeURL(url);
 
-        const analysis = analyzeURL(urlObject);
+        output.classList.remove("hidden");
 
-        lastReport = generateReport(
-            urlObject,
-            analysis
-        );
+        scoreBox.textContent = result.risk + "/100";
 
-        report.textContent = lastReport;
+        scoreBox.className = "score " +
+            (
+                result.risk >= 60 ? "red" :
+                result.risk >= 25 ? "yellow" : "green"
+            );
+
+        let status = "LOW RISK";
+
+        if (result.risk >= 60) {
+            status = "HIGH RISK";
+        } else if (result.risk >= 25) {
+            status = "CAUTION";
+        }
+
+        assessment.innerHTML = "<h3>ASSESSMENT: " + status + "</h3>";
+
+        details.innerHTML = `
+            <b>Hostname:</b> ${escapeHTML(result.info.hostname)}<br>
+            <b>Subdomain:</b> ${escapeHTML(result.info.subdomain)}<br>
+            <b>Root Domain:</b> ${escapeHTML(result.info.rootDomain)}<br>
+            <b>TLD:</b> ${escapeHTML(result.info.tld)}<br>
+            <b>Protocol:</b> ${escapeHTML(url.protocol)}<br>
+            <b>URL Length:</b> ${url.href.length}
+        `;
+
+        if (result.findings.length === 0) {
+
+            findingsBox.innerHTML =
+                "<div class='finding info'>No suspicious patterns detected.</div>";
+
+        } else {
+
+            result.findings.forEach(item => {
+
+                const div = document.createElement("div");
+
+                div.className = "finding " +
+                    (item.level === "high" ? "high" : "info");
+
+                div.textContent =
+                    item.name + " | +" + item.points + " points";
+
+                findingsBox.appendChild(div);
+
+            });
+
+        }
+
+        result.recommendations.forEach(item => {
+
+            const div = document.createElement("div");
+
+            div.className = "finding info";
+            div.textContent = item;
+
+            recommendations.appendChild(div);
+
+        });
+
+        lastReport = generateReport(url, result, status);
 
     } catch (error) {
 
-        lastReport =
-            "POLICE CYBER LAB " + VERSION + "\n" +
-            "--------------------------------\n" +
-            "ERROR: Invalid URL\n" +
-            "Details: " + error.message + "\n";
+        output.classList.remove("hidden");
 
-        report.textContent = lastReport;
+        assessment.textContent = "INVALID URL: " + error.message;
+
+        scoreBox.textContent = "N/A";
+
+        details.textContent = "";
+        findingsBox.textContent = "";
+        recommendations.textContent = "";
+
+        lastReport = "POLICE CYBER LAB 4.0\nINVALID URL\n" + error.message;
+
     }
+
 }
 
 
-/* ---------- CLEAR ---------- */
+/* ==================================
+   REPORT GENERATOR
+================================== */
+
+function generateReport(url, result, status) {
+
+    let report = `
+================================
+POLICE CYBER LAB
+LINK SECURITY SCANNER 4.0
+================================
+
+URL: ${url.href}
+
+HOSTNAME: ${result.info.hostname}
+ROOT DOMAIN: ${result.info.rootDomain}
+SUBDOMAIN: ${result.info.subdomain}
+PROTOCOL: ${url.protocol}
+
+RISK SCORE: ${result.risk}/100
+ASSESSMENT: ${status}
+
+SECURITY FINDINGS:
+`;
+
+    result.findings.forEach(item => {
+
+        report += "\n- " + item.name + " (+" + item.points + ")";
+
+    });
+
+    report += "\n\nRECOMMENDATIONS:\n";
+
+    result.recommendations.forEach(item => {
+
+        report += "\n- " + item;
+
+    });
+
+    report += `
+
+================================
+LOCAL HEURISTIC ANALYSIS
+NO EXTERNAL WEBSITE REQUESTS
+NOT A GUARANTEE OF SAFETY
+================================
+`;
+
+    return report;
+
+}
+
+
+/* ==================================
+   HTML ESCAPING
+================================== */
+
+function escapeHTML(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+        char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        })[char]
+    );
+
+}
+
+
+/* ==================================
+   COPY REPORT
+================================== */
+
+function copyReport() {
+
+    if (!lastReport) {
+        alert("Run a scan first.");
+        return;
+    }
+
+    const textarea = document.createElement("textarea");
+
+    textarea.value = lastReport;
+
+    document.body.appendChild(textarea);
+
+    textarea.select();
+
+    try {
+
+        document.execCommand("copy");
+        alert("Security report copied.");
+
+    } catch {
+
+        alert("Copy failed. Please copy manually.");
+
+    }
+
+    textarea.remove();
+
+}
+
+
+/* ==================================
+   CLEAR
+================================== */
 
 function clearAll() {
 
     document.getElementById("urlInput").value = "";
 
-    document.getElementById("report").textContent =
-        "POLICE CYBER LAB " + VERSION + "\n" +
-        "--------------------------------\n" +
-        "SYSTEM STATUS: READY\n" +
-        "Waiting for URL input...";
+    document.getElementById("output").classList.add("hidden");
 
-    document.getElementById("testReport").textContent =
-        "SYSTEM READY\nPress RUN AUTO TESTS to begin.";
-
-    document.getElementById("testSummary").textContent =
-        "Tests have not been executed yet.";
+    document.getElementById("testResults").textContent =
+        "Waiting for tests...";
 
     lastReport = "";
-}
 
-
-/* ---------- COPY REPORT ---------- */
-
-async function copyReport() {
-
-    const report =
-        lastReport ||
-        document.getElementById("report").textContent;
-
-    try {
-
-        await navigator.clipboard.writeText(report);
-
-        alert("Report copied successfully!");
-
-    } catch (error) {
-
-        const textArea = document.createElement("textarea");
-
-        textArea.value = report;
-
-        document.body.appendChild(textArea);
-
-        textArea.select();
-
-        document.execCommand("copy");
-
-        textArea.remove();
-
-        alert("Copy attempted. Check clipboard.");
     }
-}
-
-
-/* ---------- TEST ASSERTION ---------- */
-
-function assertEqual(actual, expected) {
-    return actual === expected;
-}
-
-
-/* ---------- AUTOMATED TEST SYSTEM ---------- */
+    /* ==================================
+   AUTOMATED TEST SYSTEM 4.0
+================================== */
 
 function runTests() {
 
-    const results = [];
+    const tests = [
 
-    function test(name, callback) {
+        {
+            name: "Official HTTPS URL",
+            input: "https://example.com",
+            expected: 0
+        },
+        {
+            name: "HTTP Detection",
+            input: "http://example.com",
+            expected: 15
+        },
+        {
+            name: "Credentials Detection",
+            input: "https://user:pass@example.com",
+            expected: 25
+        },
+        {
+            name: "IP Address Detection",
+            input: "https://192.168.1.1",
+            expected: 15
+        },
+        {
+            name: "Punycode Detection",
+            input: "https://xn--e1afmkfd.xn--p1ai",
+            expected: 20
+        },
+        {
+            name: "Suspicious TLD",
+            input: "https://example.top",
+            expected: 10
+        },
+        {
+            name: "Deep Subdomain",
+            input: "https://a.b.c.example.com",
+            expected: 10
+        },
+        {
+            name: "Sensitive Keywords",
+            input: "https://login-verify.example.com",
+            expected: 10
+        },
+        {
+            name: "Brand Impersonation",
+            input: "https://paypal.example.com",
+            expected: 30
+        },
+        {
+            name: "Brand Lookalike",
+            input: "https://paypa1.com",
+            expected: 30
+        },
+        {
+            name: "Redirect Parameter",
+            input: "https://example.com/?next=https%3A%2F%2Fother.com",
+            expected: 15
+        },
+        {
+            name: "Long URL",
+            input: "https://example.com/" + "a".repeat(210),
+            expected: 5
+        },
+        {
+            name: "Official Google Domain",
+            input: "https://google.com",
+            expected: 0
+        },
+        {
+            name: "Official Microsoft Domain",
+            input: "https://microsoft.com",
+            expected: 0
+        },
+        {
+            name: "Official Apple Domain",
+            input: "https://apple.com",
+            expected: 0
+        },
+        {
+            name: "Official Amazon Domain",
+            input: "https://amazon.com",
+            expected: 0
+        },
+        {
+            name: "Official Netflix Domain",
+            input: "https://netflix.com",
+            expected: 0
+        },
+        {
+            name: "Official Facebook Domain",
+            input: "https://facebook.com",
+            expected: 0
+        },
+        {
+            name: "Official Telegram Domain",
+            input: "https://telegram.org",
+            expected: 0
+        },
+        {
+            name: "Official Instagram Domain",
+            input: "https://instagram.com",
+            expected: 0
+        }
+
+    ];
+
+    let passed = 0;
+    let failed = 0;
+
+    const box = document.getElementById("testResults");
+
+    box.innerHTML = "";
+
+    tests.forEach(test => {
 
         try {
 
-            const passed = callback();
+            const url = parseURL(test.input);
+            const result = analyzeURL(url);
 
-            results.push({
-                name,
-                passed: Boolean(passed)
-            });
+            const success = result.risk === test.expected;
+
+            if (success) {
+                passed++;
+            } else {
+                failed++;
+            }
+
+            const div = document.createElement("div");
+
+            div.className =
+                "finding " + (success ? "info" : "high");
+
+            div.textContent =
+                (success ? "PASS" : "FAIL") +
+                " | " + test.name +
+                " | Expected: " + test.expected +
+                " | Actual: " + result.risk;
+
+            box.appendChild(div);
 
         } catch (error) {
 
-            results.push({
-                name,
-                passed: false,
-                error: error.message
-            });
-        }
-    }
+            failed++;
 
+            const div = document.createElement("div");
+            div.className = "finding high";
+            div.textContent = "ERROR | " + test.name;
 
-    test("Official PayPal Domain", () => {
-        return isOfficialDomain("www.paypal.com", "paypal");
-    });
+            box.appendChild(div);
 
-
-    test("Official Google Subdomain", () => {
-        return isOfficialDomain("mail.google.com", "google");
-    });
-
-
-    test("Paypa1 Lookalike Detection", () => {
-        return detectBrandImpersonation("paypa1.com")
-            .some(item => item.brand === "paypal");
-    });
-
-
-    test("Hyphen Lookalike Detection", () => {
-        return detectBrandImpersonation("pay-pal.com")
-            .some(item => item.brand === "paypal");
-    });
-
-
-    test("Extra Character Detection", () => {
-        return detectBrandImpersonation("paypall.com")
-            .some(item => item.brand === "paypal");
-    });
-
-
-    test("Sensitive Keyword Detection", () => {
-        const url = parseTargetURL("https://example.com/login");
-        return detectSuspiciousKeywords(url).includes("login");
-    });
-
-
-    test("Punycode Detection", () => {
-        return detectPunycode("xn--example.com");
-    });
-
-
-    test("HTTP Protocol Detection", () => {
-        const url = parseTargetURL("http://example.com");
-        return url.protocol === "http:";
-    });
-
-
-    test("Embedded Credentials Detection", () => {
-        const url = parseTargetURL("https://user:pass@example.com");
-        return detectCredentials(url);
-    });
-
-
-    test("External Redirect Detection", () => {
-        const url = parseTargetURL(
-            "https://example.com/?redirect=https%3A%2F%2Fevil.test"
-        );
-        return detectExternalRedirects(url).length === 1;
-    });
-
-
-    test("Non-Standard Port Detection", () => {
-        const url = parseTargetURL("https://example.com:8080");
-        return detectSuspiciousPort(url);
-    });
-
-
-    test("Invalid URL Rejection", () => {
-        try {
-            parseTargetURL("https://");
-            return false;
-        } catch (error) {
-            return true;
-        }
-    });
-
-
-    test("Localhost URL Parsing", () => {
-        const url = parseTargetURL("http://localhost:8080");
-        return url.hostname === "localhost";
-    });
-
-
-    test("Edit Distance Calculation", () => {
-        return editDistance("paypal", "paypall") === 1;
-    });
-
-
-    const passed =
-        results.filter(item => item.passed).length;
-
-    const failed =
-        results.length - passed;
-
-    let output =
-        "POLICE CYBER LAB " + VERSION + "\n";
-
-    output += "AUTOMATED TEST SYSTEM 3.1\n";
-    output += "--------------------------------\n\n";
-
-    for (const item of results) {
-
-        output +=
-            (item.passed ? "PASS" : "FAIL") +
-            " | " +
-            item.name;
-
-        if (item.error) {
-            output += " | " + item.error;
         }
 
-        output += "\n";
-    }
+    });
 
-    output += "\n--------------------------------\n";
+    const summary = document.createElement("h3");
 
-    output += "TOTAL TESTS: " + results.length + "\n";
-    output += "PASSED: " + passed + "\n";
-    output += "FAILED: " + failed + "\n";
+    summary.textContent =
+        "RESULT: " + passed +
+        "/" + tests.length +
+        " PASSED | " + failed + " FAILED";
 
-    output += "STATUS: " +
-        (failed === 0
-            ? "ALL TESTS PASSED"
-            : "TESTS FAILED");
+    summary.className =
+        failed === 0 ? "green" : "red";
 
-    document.getElementById("testReport")
-        .textContent = output;
+    box.prepend(summary);
 
-    document.getElementById("testSummary")
-        .textContent =
-        "TOTAL: " + results.length +
-        " | PASSED: " + passed +
-        " | FAILED: " + failed +
-        " | STATUS: " +
-        (failed === 0 ? "SUCCESS" : "CHECK REQUIRED");
 }
 
 
-/* ---------- INITIALIZATION ---------- */
+/* ==================================
+   STARTUP
+================================== */
 
-document.getElementById("urlInput")
-    .addEventListener("keydown", function(event) {
-
-        if (event.key === "Enter") {
-            startScan();
-        }
-    });
-
+console.log("POLICE CYBER LAB 4.0 READY");
+  
 </script>
-
+    
 </body>
 </html>
